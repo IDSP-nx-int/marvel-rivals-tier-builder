@@ -1,0 +1,451 @@
+{
+  "kind": "roster",
+  "rosterVersion": "2026-10-23.reference",
+  "status": "reference-unverified-per-patch",
+  "sources": [
+    "https://www.marvelrivals.com/heroes/",
+    "https://psylocke.gg/heroes",
+    "https://liquipedia.net/marvelrivals/Hero_ID"
+  ],
+  "notes": [
+    "54 personajes; 14 Vanguard exclusivos, 27 Duelist exclusivos, 12 Strategist exclusivos, Deadpool multirrol",
+    "La elegibilidad Main/Off/Flex NO está prejuzgada. Todos los candidatos compatibles con la categoría pueden evaluarse por el usuario.",
+    "Sin valoraciones de tier, estadísticas competitivas, habilidades curadas ni assets de terceros."
+  ],
+  "heroes": [
+    {
+      "id": "hero.adam-warlock",
+      "name": "Adam Warlock",
+      "categories": [
+        "strategist"
+      ],
+      "portrait": "assets/heroes/adam-warlock.webp"
+    },
+    {
+      "id": "hero.angela",
+      "name": "Angela",
+      "categories": [
+        "vanguard"
+      ],
+      "portrait": "assets/heroes/angela.webp"
+    },
+    {
+      "id": "hero.black-cat",
+      "name": "Black Cat",
+      "categories": [
+        "duelist"
+      ],
+      "portrait": "assets/heroes/black-cat.webp"
+    },
+    {
+      "id": "hero.black-panther",
+      "name": "Black Panther",
+      "categories": [
+        "duelist"
+      ],
+      "portrait": "assets/heroes/black-panther.webp"
+    },
+    {
+      "id": "hero.black-widow",
+      "name": "Black Widow",
+      "categories": [
+        "duelist"
+      ],
+      "portrait": "assets/heroes/black-widow.webp"
+    },
+    {
+      "id": "hero.blade",
+      "name": "Blade",
+      "categories": [
+        "duelist"
+      ],
+      "portrait": "assets/heroes/blade.webp"
+    },
+    {
+      "id": "hero.captain-america",
+      "name": "Captain America",
+      "categories": [
+        "vanguard"
+      ],
+      "portrait": "assets/heroes/captain-america.webp"
+    },
+    {
+      "id": "hero.cloak-dagger",
+      "name": "Cloak & Dagger",
+      "categories": [
+        "strategist"
+      ],
+      "portrait": "assets/heroes/cloak-dagger.webp"
+    },
+    {
+      "id": "hero.cyclops",
+      "name": "Cyclops",
+      "categories": [
+        "duelist"
+      ],
+      "portrait": "assets/heroes/cyclops.webp"
+    },
+    {
+      "id": "hero.daredevil",
+      "name": "Daredevil",
+      "categories": [
+        "duelist"
+      ],
+      "portrait": "assets/heroes/daredevil.webp"
+    },
+    {
+      "id": "hero.deadpool",
+      "name": "Deadpool",
+      "categories": [
+        "vanguard",
+        "duelist",
+        "strategist"
+      ],
+      "portrait": "assets/heroes/deadpool.webp"
+    },
+    {
+      "id": "hero.devil-dinosaur",
+      "name": "Devil Dinosaur",
+      "categories": [
+        "vanguard"
+      ],
+      "portrait": "assets/heroes/devil-dinosaur.webp"
+    },
+    {
+      "id": "hero.doctor-strange",
+      "name": "Doctor Strange",
+      "categories": [
+        "vanguard"
+      ],
+      "portrait": "assets/heroes/doctor-strange.webp"
+    },
+    {
+      "id": "hero.elsa-bloodstone",
+      "name": "Elsa Bloodstone",
+      "categories": [
+        "duelist"
+      ],
+      "portrait": "assets/heroes/elsa-bloodstone.webp"
+    },
+    {
+      "id": "hero.emma-frost",
+      "name": "Emma Frost",
+      "categories": [
+        "vanguard"
+      ],
+      "portrait": "assets/heroes/emma-frost.webp"
+    },
+    {
+      "id": "hero.gambit",
+      "name": "Gambit",
+      "categories": [
+        "strategist"
+      ],
+      "portrait": "assets/heroes/gambit.webp"
+    },
+    {
+      "id": "hero.gorr-the-god-butcher",
+      "name": "Gorr the God Butcher",
+      "categories": [
+        "duelist"
+      ],
+      "portrait": "assets/heroes/gorr-the-god-butcher.webp"
+    },
+    {
+      "id": "hero.groot",
+      "name": "Groot",
+      "categories": [
+        "vanguard"
+      ],
+      "portrait": "assets/heroes/groot.webp"
+    },
+    {
+      "id": "hero.hawkeye",
+      "name": "Hawkeye",
+      "categories": [
+        "duelist"
+      ],
+      "portrait": "assets/heroes/hawkeye.webp"
+    },
+    {
+      "id": "hero.hela",
+      "name": "Hela",
+      "categories": [
+        "duelist"
+      ],
+      "portrait": "assets/heroes/hela.webp"
+    },
+    {
+      "id": "hero.hulk",
+      "name": "Hulk",
+      "categories": [
+        "vanguard"
+      ],
+      "portrait": "assets/heroes/hulk.webp"
+    },
+    {
+      "id": "hero.human-torch",
+      "name": "Human Torch",
+      "categories": [
+        "duelist"
+      ],
+      "portrait": "assets/heroes/human-torch.webp"
+    },
+    {
+      "id": "hero.invisible-woman",
+      "name": "Invisible Woman",
+      "categories": [
+        "strategist"
+      ],
+      "portrait": "assets/heroes/invisible-woman.webp"
+    },
+    {
+      "id": "hero.iron-fist",
+      "name": "Iron Fist",
+      "categories": [
+        "duelist"
+      ],
+      "portrait": "assets/heroes/iron-fist.webp"
+    },
+    {
+      "id": "hero.iron-man",
+      "name": "Iron Man",
+      "categories": [
+        "duelist"
+      ],
+      "portrait": "assets/heroes/iron-man.webp"
+    },
+    {
+      "id": "hero.jeff-the-land-shark",
+      "name": "Jeff the Land Shark",
+      "categories": [
+        "strategist"
+      ],
+      "portrait": "assets/heroes/jeff-the-land-shark.webp"
+    },
+    {
+      "id": "hero.jubilee",
+      "name": "Jubilee",
+      "categories": [
+        "strategist"
+      ],
+      "portrait": "assets/heroes/jubilee.webp"
+    },
+    {
+      "id": "hero.loki",
+      "name": "Loki",
+      "categories": [
+        "strategist"
+      ],
+      "portrait": "assets/heroes/loki.webp"
+    },
+    {
+      "id": "hero.luna-snow",
+      "name": "Luna Snow",
+      "categories": [
+        "strategist"
+      ],
+      "portrait": "assets/heroes/luna-snow.webp"
+    },
+    {
+      "id": "hero.magik",
+      "name": "Magik",
+      "categories": [
+        "duelist"
+      ],
+      "portrait": "assets/heroes/magik.webp"
+    },
+    {
+      "id": "hero.magneto",
+      "name": "Magneto",
+      "categories": [
+        "vanguard"
+      ],
+      "portrait": "assets/heroes/magneto.webp"
+    },
+    {
+      "id": "hero.mantis",
+      "name": "Mantis",
+      "categories": [
+        "strategist"
+      ],
+      "portrait": "assets/heroes/mantis.webp"
+    },
+    {
+      "id": "hero.mister-fantastic",
+      "name": "Mister Fantastic",
+      "categories": [
+        "duelist"
+      ],
+      "portrait": "assets/heroes/mister-fantastic.webp"
+    },
+    {
+      "id": "hero.moon-knight",
+      "name": "Moon Knight",
+      "categories": [
+        "duelist"
+      ],
+      "portrait": "assets/heroes/moon-knight.webp"
+    },
+    {
+      "id": "hero.namor",
+      "name": "Namor",
+      "categories": [
+        "duelist"
+      ],
+      "portrait": "assets/heroes/namor.webp"
+    },
+    {
+      "id": "hero.peni-parker",
+      "name": "Peni Parker",
+      "categories": [
+        "vanguard"
+      ],
+      "portrait": "assets/heroes/peni-parker.webp"
+    },
+    {
+      "id": "hero.phoenix",
+      "name": "Phoenix",
+      "categories": [
+        "duelist"
+      ],
+      "portrait": "assets/heroes/phoenix.webp"
+    },
+    {
+      "id": "hero.psylocke",
+      "name": "Psylocke",
+      "categories": [
+        "duelist"
+      ],
+      "portrait": "assets/heroes/psylocke.webp"
+    },
+    {
+      "id": "hero.rocket-raccoon",
+      "name": "Rocket Raccoon",
+      "categories": [
+        "strategist"
+      ],
+      "portrait": "assets/heroes/rocket-raccoon.webp"
+    },
+    {
+      "id": "hero.rogue",
+      "name": "Rogue",
+      "categories": [
+        "vanguard"
+      ],
+      "portrait": "assets/heroes/rogue.webp"
+    },
+    {
+      "id": "hero.scarlet-witch",
+      "name": "Scarlet Witch",
+      "categories": [
+        "duelist"
+      ],
+      "portrait": "assets/heroes/scarlet-witch.webp"
+    },
+    {
+      "id": "hero.spider-man",
+      "name": "Spider-Man",
+      "categories": [
+        "duelist"
+      ],
+      "portrait": "assets/heroes/spider-man.webp"
+    },
+    {
+      "id": "hero.squirrel-girl",
+      "name": "Squirrel Girl",
+      "categories": [
+        "duelist"
+      ],
+      "portrait": "assets/heroes/squirrel-girl.webp"
+    },
+    {
+      "id": "hero.star-lord",
+      "name": "Star-Lord",
+      "categories": [
+        "duelist"
+      ],
+      "portrait": "assets/heroes/star-lord.webp"
+    },
+    {
+      "id": "hero.storm",
+      "name": "Storm",
+      "categories": [
+        "duelist"
+      ],
+      "portrait": "assets/heroes/storm.webp"
+    },
+    {
+      "id": "hero.the-hood",
+      "name": "The Hood",
+      "categories": [
+        "vanguard"
+      ],
+      "portrait": "assets/heroes/the-hood.webp"
+    },
+    {
+      "id": "hero.the-punisher",
+      "name": "The Punisher",
+      "categories": [
+        "duelist"
+      ],
+      "portrait": "assets/heroes/the-punisher.webp"
+    },
+    {
+      "id": "hero.the-thing",
+      "name": "The Thing",
+      "categories": [
+        "vanguard"
+      ],
+      "portrait": "assets/heroes/the-thing.webp"
+    },
+    {
+      "id": "hero.thor",
+      "name": "Thor",
+      "categories": [
+        "vanguard"
+      ],
+      "portrait": "assets/heroes/thor.webp"
+    },
+    {
+      "id": "hero.ultron",
+      "name": "Ultron",
+      "categories": [
+        "strategist"
+      ],
+      "portrait": "assets/heroes/ultron.webp"
+    },
+    {
+      "id": "hero.venom",
+      "name": "Venom",
+      "categories": [
+        "vanguard"
+      ],
+      "portrait": "assets/heroes/venom.webp"
+    },
+    {
+      "id": "hero.white-fox",
+      "name": "White Fox",
+      "categories": [
+        "strategist"
+      ],
+      "portrait": "assets/heroes/white-fox.webp"
+    },
+    {
+      "id": "hero.winter-soldier",
+      "name": "Winter Soldier",
+      "categories": [
+        "duelist"
+      ],
+      "portrait": "assets/heroes/winter-soldier.webp"
+    },
+    {
+      "id": "hero.wolverine",
+      "name": "Wolverine",
+      "categories": [
+        "duelist"
+      ],
+      "portrait": "assets/heroes/wolverine.webp"
+    }
+  ]
+}
