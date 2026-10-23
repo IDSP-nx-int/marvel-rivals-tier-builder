@@ -1,0 +1,14 @@
+{
+  "kind": "matchup",
+  "schemaVersion": "0.8.0",
+  "id": "matchup.brawl-vs-dive.demo",
+  "patchId": "patch.demo.1",
+  "modelId": "model.personal.demo",
+  "modelRevision": 1,
+  "teamACompositionId": "comp.brawl.demo",
+  "teamBCompositionId": "comp.dive.demo",
+  "context": {
+    "sideA": "unspecified",
+    "scenario": "Brawl vs Dive, datos ficticios; geometría y parche real no especificados"
+  }
+}

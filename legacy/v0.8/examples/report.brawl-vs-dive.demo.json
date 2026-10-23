@@ -1,0 +1,41 @@
+{
+  "kind": "report",
+  "schemaVersion": "0.8.0",
+  "id": "report.brawl-vs-dive.demo",
+  "matchupId": "matchup.brawl-vs-dive.demo",
+  "engineVersion": "demo-engine-v0.8.0",
+  "rulepackId": "rules.demo.v08",
+  "computedAt": "2026-10-23T12:00:00-06:00",
+  "inputs": {
+    "patchId": "patch.demo.1",
+    "modelId": "model.personal.demo",
+    "modelRevision": 1,
+    "teamACompositionId": "comp.brawl.demo",
+    "teamBCompositionId": "comp.dive.demo"
+  },
+  "findings": [
+    {
+      "id": "finding.dive-disputed",
+      "ruleId": "rule.peel-counter",
+      "direction": "b-to-a",
+      "status": "insufficient-data",
+      "title": "Peel candidato; compatibilidad pendiente",
+      "explanation": "El perfil de Centinela declara Peel 4/5; la ventana y alcance reales deben confirmarse antes de tratarlo como contramedida ejecutable.",
+      "evidence": [
+        {
+          "sourceType": "assignment",
+          "sourceId": "assign.centinela.flex-tank",
+          "heroId": "hero.centinela"
+        },
+        {
+          "sourceType": "rule",
+          "sourceId": "rule.peel-counter"
+        }
+      ],
+      "limitations": [
+        "Compatibilidad exacta de alcance y ventana no incluida en este conjunto de datos ficticios."
+      ],
+      "provenance": "derived"
+    }
+  ]
+}

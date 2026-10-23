@@ -1,0 +1,54 @@
+{
+  "kind": "composition",
+  "schemaVersion": "0.8.0",
+  "id": "comp.dive.demo",
+  "modelId": "model.personal.demo",
+  "modelRevision": 1,
+  "patchId": "patch.demo.1",
+  "title": "Equipo B — Dive ficticio",
+  "slots": [
+    {
+      "heroId": "hero.lanza",
+      "assignmentId": "assign.lanza.main-tank"
+    },
+    {
+      "heroId": "hero.garra",
+      "assignmentId": "assign.garra.main-dps"
+    },
+    {
+      "heroId": "hero.lince",
+      "assignmentId": "assign.lince.off-dps"
+    },
+    {
+      "heroId": "hero.eco",
+      "assignmentId": "assign.eco.flex-dps"
+    },
+    {
+      "heroId": "hero.faro",
+      "assignmentId": "assign.faro.main-support"
+    },
+    {
+      "heroId": "hero.pulso",
+      "assignmentId": "assign.pulso.flex-support"
+    }
+  ],
+  "winConditionPlans": [
+    {
+      "id": "plan.dive.demo",
+      "mechanismId": "wc.dive-collapse",
+      "participantHeroIds": [
+        "hero.lanza",
+        "hero.lince",
+        "hero.garra",
+        "hero.eco"
+      ],
+      "targetZone": "backline",
+      "windowId": "window.opening"
+    }
+  ],
+  "resourceClaims": [],
+  "context": {
+    "side": "unspecified",
+    "phase": "opening"
+  }
+}

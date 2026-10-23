@@ -1,0 +1,165 @@
+{
+  "kind": "model",
+  "schemaVersion": "0.8.0",
+  "id": "model.reference.demo",
+  "patchId": "patch.demo.1",
+  "title": "Modelo de referencia editorial ficticio",
+  "origin": "reference",
+  "revision": 1,
+  "updatedAt": "2026-10-23T12:00:00-06:00",
+  "eligibilityOverrides": [],
+  "assignments": [
+    {
+      "id": "assign.bastion.main-tank",
+      "heroId": "hero.bastion",
+      "subroleId": "subrole.main-tank",
+      "tier": "A",
+      "locked": true,
+      "ratings": {
+        "cap.space-control": {
+          "state": "rated",
+          "score": 5
+        },
+        "cap.mitigation": {
+          "state": "rated",
+          "score": 4
+        },
+        "cap.effective-uptime": {
+          "state": "rated",
+          "score": 4
+        }
+      },
+      "vulnerabilities": {},
+      "dependencies": {
+        "dep.healing": "present"
+      },
+      "authoredBy": "player",
+      "lockedAt": "2026-10-23T09:00:00-06:00"
+    },
+    {
+      "id": "assign.muralla.off-tank",
+      "heroId": "hero.muralla",
+      "subroleId": "subrole.off-tank",
+      "tier": "A",
+      "locked": true,
+      "ratings": {
+        "cap.off-angle-pressure": {
+          "state": "rated",
+          "score": 4
+        },
+        "cap.backline-access": {
+          "state": "rated",
+          "score": 4
+        },
+        "cap.effective-uptime": {
+          "state": "rated",
+          "score": 4
+        }
+      },
+      "vulnerabilities": {},
+      "dependencies": {},
+      "authoredBy": "player",
+      "lockedAt": "2026-10-23T09:00:00-06:00"
+    },
+    {
+      "id": "assign.centinela.flex-tank",
+      "heroId": "hero.centinela",
+      "subroleId": "subrole.flex-tank",
+      "tier": "B",
+      "locked": true,
+      "ratings": {
+        "cap.peel": {
+          "state": "rated",
+          "score": 4
+        },
+        "cap.space-control": {
+          "state": "rated",
+          "score": 3
+        },
+        "cap.mobility-reset": {
+          "state": "rated",
+          "score": 3
+        }
+      },
+      "vulnerabilities": {},
+      "dependencies": {},
+      "authoredBy": "player",
+      "lockedAt": "2026-10-23T09:00:00-06:00"
+    },
+    {
+      "id": "assign.brasa.main-dps",
+      "heroId": "hero.brasa",
+      "subroleId": "subrole.main-dps",
+      "tier": "A",
+      "locked": true,
+      "ratings": {
+        "cap.sustained-pressure": {
+          "state": "rated",
+          "score": 5
+        },
+        "cap.kill-conversion": {
+          "state": "rated",
+          "score": 4
+        },
+        "cap.effective-uptime": {
+          "state": "rated",
+          "score": 4
+        }
+      },
+      "vulnerabilities": {},
+      "dependencies": {},
+      "authoredBy": "player",
+      "lockedAt": "2026-10-23T09:00:00-06:00"
+    },
+    {
+      "id": "assign.manantial.main-support",
+      "heroId": "hero.manantial",
+      "subroleId": "subrole.main-support",
+      "tier": "S",
+      "locked": true,
+      "ratings": {
+        "cap.healing": {
+          "state": "rated",
+          "score": 5
+        },
+        "cap.mitigation": {
+          "state": "rated",
+          "score": 4
+        },
+        "cap.effective-uptime": {
+          "state": "rated",
+          "score": 4
+        }
+      },
+      "vulnerabilities": {},
+      "dependencies": {},
+      "authoredBy": "player",
+      "lockedAt": "2026-10-23T09:00:00-06:00"
+    },
+    {
+      "id": "assign.custodio.off-support",
+      "heroId": "hero.custodio",
+      "subroleId": "subrole.off-support",
+      "tier": "A",
+      "locked": true,
+      "ratings": {
+        "cap.utility": {
+          "state": "rated",
+          "score": 4
+        },
+        "cap.peel": {
+          "state": "rated",
+          "score": 4
+        },
+        "cap.mobility-reset": {
+          "state": "rated",
+          "score": 4
+        }
+      },
+      "vulnerabilities": {},
+      "dependencies": {},
+      "authoredBy": "player",
+      "lockedAt": "2026-10-23T09:00:00-06:00"
+    }
+  ]
+}

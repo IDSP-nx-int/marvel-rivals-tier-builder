@@ -1,0 +1,66 @@
+{
+  "kind": "composition",
+  "schemaVersion": "0.8.0",
+  "id": "comp.conflict.demo",
+  "modelId": "model.personal.demo",
+  "modelRevision": 1,
+  "patchId": "patch.demo.1",
+  "title": "Equipo A — Variante con conflicto ficticio",
+  "slots": [
+    {
+      "heroId": "hero.bastion",
+      "assignmentId": "assign.bastion.main-tank"
+    },
+    {
+      "heroId": "hero.muralla",
+      "assignmentId": "assign.muralla.off-tank"
+    },
+    {
+      "heroId": "hero.centinela",
+      "assignmentId": "assign.centinela.flex-tank"
+    },
+    {
+      "heroId": "hero.brasa",
+      "assignmentId": "assign.brasa.main-dps"
+    },
+    {
+      "heroId": "hero.manantial",
+      "assignmentId": "assign.manantial.main-support"
+    },
+    {
+      "heroId": "hero.custodio",
+      "assignmentId": "assign.custodio.off-support"
+    }
+  ],
+  "winConditionPlans": [
+    {
+      "id": "plan.conflict.demo",
+      "mechanismId": "wc.brawl-objective",
+      "participantHeroIds": [
+        "hero.bastion",
+        "hero.muralla",
+        "hero.brasa"
+      ],
+      "targetZone": "objective",
+      "windowId": "window.opening"
+    }
+  ],
+  "resourceClaims": [
+    {
+      "resourceId": "res.healing-focus",
+      "consumerHeroId": "hero.bastion",
+      "amount": 1,
+      "windowId": "window.opening"
+    },
+    {
+      "resourceId": "res.healing-focus",
+      "consumerHeroId": "hero.muralla",
+      "amount": 1,
+      "windowId": "window.opening"
+    }
+  ],
+  "context": {
+    "side": "unspecified",
+    "phase": "opening"
+  }
+}
