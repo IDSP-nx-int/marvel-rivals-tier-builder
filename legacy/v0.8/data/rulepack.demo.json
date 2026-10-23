@@ -1,0 +1,55 @@
+{
+  "kind": "rulepack",
+  "schemaVersion": "0.8.0",
+  "id": "rules.demo.v08",
+  "patchId": "patch.demo.1",
+  "version": "0.8.0",
+  "resourcePools": [
+    {
+      "id": "res.healing-focus",
+      "providerHeroId": "hero.manantial",
+      "capacity": 1,
+      "unit": "foco-de-atencion-ficticio",
+      "supportedWindows": [
+        "window.opening"
+      ]
+    }
+  ],
+  "interactionRules": [
+    {
+      "id": "rule.engage-convert",
+      "scope": "composition",
+      "kind": "capability-chain",
+      "requirements": [
+        {
+          "capabilityId": "cap.engage",
+          "minScore": 4
+        },
+        {
+          "capabilityId": "cap.kill-conversion",
+          "minScore": 4
+        }
+      ],
+      "requiresSameWindow": true,
+      "requiresCompatibleTarget": true,
+      "result": "win-condition-candidate",
+      "mechanismId": "wc.dive-collapse",
+      "description": "Candidato a cadena de entrada y conversión, sujeto a compatibilidad espacial y temporal."
+    },
+    {
+      "id": "rule.peel-counter",
+      "scope": "matchup",
+      "kind": "counter-check",
+      "requirements": [
+        {
+          "capabilityId": "cap.peel",
+          "minScore": 4
+        }
+      ],
+      "requiresSameWindow": true,
+      "requiresCompatibleTarget": true,
+      "result": "contested",
+      "description": "Un Peel que alcanza al objetivo en la ventana pertinente puede disputar una Dive."
+    }
+  ]
+}

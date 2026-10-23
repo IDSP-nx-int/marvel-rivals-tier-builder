@@ -1,0 +1,430 @@
+{
+  "kind": "catalog",
+  "schemaVersion": "0.8.0",
+  "patch": {
+    "id": "patch.demo.1",
+    "label": "Parche ficticio de demostración",
+    "status": "fictional-demo"
+  },
+  "heroes": [
+    {
+      "id": "hero.bastion",
+      "name": "Bastión",
+      "category": "vanguard"
+    },
+    {
+      "id": "hero.muralla",
+      "name": "Muralla",
+      "category": "vanguard"
+    },
+    {
+      "id": "hero.centinela",
+      "name": "Centinela",
+      "category": "vanguard"
+    },
+    {
+      "id": "hero.brasa",
+      "name": "Brasa",
+      "category": "duelist"
+    },
+    {
+      "id": "hero.manantial",
+      "name": "Manantial",
+      "category": "strategist"
+    },
+    {
+      "id": "hero.custodio",
+      "name": "Custodio",
+      "category": "strategist"
+    },
+    {
+      "id": "hero.lanza",
+      "name": "Lanza",
+      "category": "vanguard"
+    },
+    {
+      "id": "hero.garra",
+      "name": "Garra",
+      "category": "duelist"
+    },
+    {
+      "id": "hero.lince",
+      "name": "Lince",
+      "category": "duelist"
+    },
+    {
+      "id": "hero.eco",
+      "name": "Eco",
+      "category": "duelist"
+    },
+    {
+      "id": "hero.faro",
+      "name": "Faro",
+      "category": "strategist"
+    },
+    {
+      "id": "hero.pulso",
+      "name": "Pulso",
+      "category": "strategist"
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "cap.poke",
+      "label": "Poke",
+      "family": "pressure",
+      "definition": "Presión eficaz a distancia sin un compromiso excesivo"
+    },
+    {
+      "id": "cap.sustained-pressure",
+      "label": "Sustained Pressure",
+      "family": "pressure",
+      "definition": "Amenaza ofensiva útil en intercambios prolongados"
+    },
+    {
+      "id": "cap.burst",
+      "label": "Burst",
+      "family": "pressure",
+      "definition": "Daño o presión concentrados en una ventana corta"
+    },
+    {
+      "id": "cap.kill-conversion",
+      "label": "Kill Conversion",
+      "family": "pressure",
+      "definition": "Transformar oportunidades en eliminaciones relevantes"
+    },
+    {
+      "id": "cap.space-control",
+      "label": "Space Control",
+      "family": "space",
+      "definition": "Conquistar, mantener o negar espacio relevante"
+    },
+    {
+      "id": "cap.off-angle-pressure",
+      "label": "Off-Angle Pressure",
+      "family": "space",
+      "definition": "Amenazas funcionales desde rutas o ángulos secundarios"
+    },
+    {
+      "id": "cap.backline-access",
+      "label": "Backline Access",
+      "family": "space",
+      "definition": "Acceso y amenaza significativa sobre objetivos protegidos"
+    },
+    {
+      "id": "cap.engage",
+      "label": "Engage / Initiation",
+      "family": "space",
+      "definition": "Crear oportunidades ofensivas de iniciación"
+    },
+    {
+      "id": "cap.anti-dive",
+      "label": "Anti-Dive / Punish",
+      "family": "response",
+      "definition": "Limitar o castigar entradas agresivas enemigas"
+    },
+    {
+      "id": "cap.peel",
+      "label": "Peel / Saves",
+      "family": "response",
+      "definition": "Proteger o rescatar aliados amenazados"
+    },
+    {
+      "id": "cap.crowd-control",
+      "label": "Crowd Control",
+      "family": "response",
+      "definition": "Restringir acciones, movimientos o decisiones enemigas"
+    },
+    {
+      "id": "cap.displacement",
+      "label": "Displacement",
+      "family": "response",
+      "definition": "Alterar la posición rival mediante desplazamiento forzado"
+    },
+    {
+      "id": "cap.healing",
+      "label": "Healing / Sustain",
+      "family": "enablement",
+      "definition": "Restaurar o mantener recursos de supervivencia aliados"
+    },
+    {
+      "id": "cap.mitigation",
+      "label": "Mitigation / Protection",
+      "family": "enablement",
+      "definition": "Prevenir o reducir daño recibido"
+    },
+    {
+      "id": "cap.mobility-reset",
+      "label": "Mobility / Reset",
+      "family": "enablement",
+      "definition": "Reposicionar, escapar o recuperar disponibilidad"
+    },
+    {
+      "id": "cap.utility",
+      "label": "Utility / Enhancement",
+      "family": "enablement",
+      "definition": "Habilitar acciones con buffs, debuffs u otras utilidades"
+    },
+    {
+      "id": "cap.effective-uptime",
+      "label": "Effective Uptime",
+      "family": "continuity",
+      "definition": "Mantener o recuperar presencia funcional relevante durante el combate"
+    }
+  ],
+  "vulnerabilities": [
+    {
+      "id": "vul.poke",
+      "label": "Vulnerable to Poke",
+      "description": "Limitación frente a presión a distancia"
+    },
+    {
+      "id": "vul.dive",
+      "label": "Vulnerable to Dive",
+      "description": "Limitación frente a entradas agresivas"
+    },
+    {
+      "id": "vul.cc",
+      "label": "Vulnerable to CC",
+      "description": "Función interrumpida por control"
+    },
+    {
+      "id": "vul.displacement",
+      "label": "Vulnerable to Displacement",
+      "description": "Pérdida de posiciones por desplazamiento"
+    },
+    {
+      "id": "vul.sustain-peel",
+      "label": "Vulnerable to Sustain / Peel",
+      "description": "Conversión neutralizable por recuperación o protección"
+    },
+    {
+      "id": "vul.map-position",
+      "label": "Position / Map Dependent",
+      "description": "Depende de geometría, rutas o posición"
+    }
+  ],
+  "dependencies": [
+    {
+      "id": "dep.healing",
+      "label": "Healing",
+      "description": "Depende significativamente de recuperación aliada"
+    },
+    {
+      "id": "dep.peel",
+      "label": "Peel / Protection",
+      "description": "Depende de protección o respuestas defensivas"
+    },
+    {
+      "id": "dep.space",
+      "label": "Space / Frontline",
+      "description": "Necesita espacio generado o sostenido por compañeros"
+    },
+    {
+      "id": "dep.setup",
+      "label": "Setup / Follow-up",
+      "description": "Necesita coordinación, preparación o seguimiento"
+    },
+    {
+      "id": "dep.specific-synergy",
+      "label": "Team-Up / Specific Synergy",
+      "description": "Depende de interacciones concretas"
+    },
+    {
+      "id": "dep.ultimate-cycle",
+      "label": "Ultimate / Resource Cycle",
+      "description": "Depende de recursos de disponibilidad limitada"
+    }
+  ],
+  "subroles": [
+    {
+      "id": "subrole.main-tank",
+      "label": "Main Tank",
+      "category": "vanguard",
+      "coreCapabilities": [
+        "cap.space-control",
+        "cap.mitigation",
+        "cap.effective-uptime"
+      ],
+      "suggestedVulnerabilities": [
+        "vul.displacement",
+        "vul.dive"
+      ],
+      "suggestedDependencies": [
+        "dep.healing",
+        "dep.peel"
+      ]
+    },
+    {
+      "id": "subrole.off-tank",
+      "label": "Off Tank",
+      "category": "vanguard",
+      "coreCapabilities": [
+        "cap.off-angle-pressure",
+        "cap.backline-access",
+        "cap.effective-uptime"
+      ],
+      "suggestedVulnerabilities": [
+        "vul.cc",
+        "vul.map-position"
+      ],
+      "suggestedDependencies": [
+        "dep.healing",
+        "dep.setup"
+      ]
+    },
+    {
+      "id": "subrole.flex-tank",
+      "label": "Flex Tank",
+      "category": "vanguard",
+      "coreCapabilities": [
+        "cap.peel",
+        "cap.space-control",
+        "cap.mobility-reset"
+      ],
+      "suggestedVulnerabilities": [
+        "vul.cc",
+        "vul.displacement"
+      ],
+      "suggestedDependencies": [
+        "dep.healing",
+        "dep.setup"
+      ]
+    },
+    {
+      "id": "subrole.main-dps",
+      "label": "Main DPS",
+      "category": "duelist",
+      "coreCapabilities": [
+        "cap.sustained-pressure",
+        "cap.kill-conversion",
+        "cap.effective-uptime"
+      ],
+      "suggestedVulnerabilities": [
+        "vul.dive",
+        "vul.poke"
+      ],
+      "suggestedDependencies": [
+        "dep.space",
+        "dep.peel"
+      ]
+    },
+    {
+      "id": "subrole.off-dps",
+      "label": "Off DPS",
+      "category": "duelist",
+      "coreCapabilities": [
+        "cap.off-angle-pressure",
+        "cap.kill-conversion",
+        "cap.effective-uptime"
+      ],
+      "suggestedVulnerabilities": [
+        "vul.cc",
+        "vul.map-position"
+      ],
+      "suggestedDependencies": [
+        "dep.space",
+        "dep.setup"
+      ]
+    },
+    {
+      "id": "subrole.flex-dps",
+      "label": "Flex DPS",
+      "category": "duelist",
+      "coreCapabilities": [
+        "cap.anti-dive",
+        "cap.kill-conversion",
+        "cap.mobility-reset"
+      ],
+      "suggestedVulnerabilities": [
+        "vul.cc",
+        "vul.poke"
+      ],
+      "suggestedDependencies": [
+        "dep.peel",
+        "dep.setup"
+      ]
+    },
+    {
+      "id": "subrole.main-support",
+      "label": "Main Support",
+      "category": "strategist",
+      "coreCapabilities": [
+        "cap.healing",
+        "cap.mitigation",
+        "cap.effective-uptime"
+      ],
+      "suggestedVulnerabilities": [
+        "vul.dive",
+        "vul.cc"
+      ],
+      "suggestedDependencies": [
+        "dep.peel",
+        "dep.space"
+      ]
+    },
+    {
+      "id": "subrole.off-support",
+      "label": "Off Support",
+      "category": "strategist",
+      "coreCapabilities": [
+        "cap.utility",
+        "cap.peel",
+        "cap.mobility-reset"
+      ],
+      "suggestedVulnerabilities": [
+        "vul.dive",
+        "vul.cc"
+      ],
+      "suggestedDependencies": [
+        "dep.space",
+        "dep.setup"
+      ]
+    },
+    {
+      "id": "subrole.flex-support",
+      "label": "Flex Support",
+      "category": "strategist",
+      "coreCapabilities": [
+        "cap.peel",
+        "cap.utility",
+        "cap.effective-uptime"
+      ],
+      "suggestedVulnerabilities": [
+        "vul.dive",
+        "vul.cc"
+      ],
+      "suggestedDependencies": [
+        "dep.peel",
+        "dep.space"
+      ]
+    }
+  ],
+  "mechanisms": [
+    {
+      "id": "wc.brawl-objective",
+      "label": "Brawl / Objective Control",
+      "description": "Control de espacio, presión sostenida y conversión"
+    },
+    {
+      "id": "wc.dive-collapse",
+      "label": "Dive / Backline Collapse",
+      "description": "Entrada, acceso al backline y eliminación"
+    },
+    {
+      "id": "wc.poke-siege",
+      "label": "Poke / Siege",
+      "description": "Presión a distancia y forzado de recursos"
+    },
+    {
+      "id": "wc.counter-engage",
+      "label": "Counter-Engage",
+      "description": "Resistir entrada, castigar compromiso y convertir"
+    },
+    {
+      "id": "wc.pick-displacement",
+      "label": "Pick / Displacement",
+      "description": "Aislar, controlar y eliminar un objetivo"
+    }
+  ]
+}
