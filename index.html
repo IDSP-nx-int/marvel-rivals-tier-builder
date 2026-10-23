@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="es"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Composition-Aware Tier Builder · Marvel Rivals</title>
+<meta name="theme-color" content="#0a1220"/>
+<meta name="description" content="Rankings por subrol, perfiles funcionales, composiciones y análisis de matchups. Herramienta de comunidad independiente."/>
+<link rel="stylesheet" href="./css/style.css"/>
+</head><body>
+<div id="shell">
+<aside id="sidebar" class="sidebar">
+  <div class="brand"><div class="brand-icon">MR</div><div><b>Tier Framework</b><small>COMPOSITION-AWARE</small></div></div>
+  <div class="side-caption">ESPACIO DE TRABAJO</div>
+  <nav id="mainNav" aria-label="Navegación principal">
+    <button data-page="overview" class="nav"><span>00</span> Vista general</button>
+    <button data-page="rankings" class="nav active"><span>01</span> Rankings por subrol</button>
+    <button data-page="composition" class="nav"><span>02</span> Composition Builder</button>
+    <button data-page="matchup" class="nav"><span>03</span> Matchup Analysis</button>
+    <button data-page="rules" class="nav"><span>04</span> Reglas y pendientes</button>
+  </nav>
+  <div class="sidebar-bottom"><b>MODELO LOCAL</b><p>Sin cuenta, servidor ni sincronización. Exporta JSON para respaldar tu trabajo.</p><small>Framework v1.0 · Contratos v0.8</small></div>
+</aside>
+<main class="main">
+  <header class="topbar"><div><div class="eyebrow">MARVEL RIVALS / TIER FRAMEWORK</div><h1>Composition-Aware Tier Builder</h1></div>
+  <div class="header-actions"><span id="patchBadge" class="chip warn">ROSTER DE REFERENCIA · META SIN EVALUAR</span><button id="importBtn" class="btn outline">Importar JSON</button><button id="exportBtn" class="btn primary">Exportar respaldo ↗</button></div></header>
+  <div id="status" class="status" role="status" aria-live="polite"></div>
+  <section id="view-overview" class="view" hidden><div class="section-title"><div><h2>Vista general</h2><p>Estado de tus evaluaciones y acceso al framework.</p></div></div><div id="overviewBody"></div></section>
+  <section id="view-rankings" class="view">
+    <div class="section-title"><div><h2>Rankings por subrol</h2><p>Compara Main, Off y Flex simultáneamente. Cada héroe puede tener un tier distinto en cada subrol.</p></div><div class="category-tabs" role="tablist" aria-label="Categoría oficial"><button data-category="vanguard" class="category-tab">Vanguard</button><button data-category="duelist" class="category-tab active">Duelist</button><button data-category="strategist" class="category-tab">Strategist</button></div></div>
+    <div class="ranking-layout"><div id="boards" class="boards" aria-label="Tres rankings por subrol"></div><aside class="pool panel"><h3>Catálogo de héroes</h3><p>Arrastra al tier correspondiente o selecciona un héroe y pulsa una fila.</p><input id="heroSearch" class="input" type="search" placeholder="Buscar héroe…" aria-label="Buscar héroe"/><div id="heroPool" class="hero-pool"></div><div id="poolInfo" class="pool-info"></div></aside></div>
+    <div id="editor" class="editor panel"><div class="editor-empty">Selecciona un héroe o arrástralo a cualquiera de los tres subroles para abrir la evaluación rápida.</div></div>
+  </section>
+  <section id="view-composition" class="view" hidden><div class="section-title"><div><h2>Composition Builder</h2><p>Seis posiciones flexibles. Las conclusiones usan solamente perfiles que realmente evaluaste.</p></div></div><div class="toolbar"><input id="compTitle" class="input" placeholder="Nombre de composición" aria-label="Nombre de composición"/><button id="exampleComp" class="btn outline">Rellenar ejemplo (sin tier)</button><button id="saveComp" class="btn primary">Guardar composición</button></div><div id="compSlots" class="comp-slots"></div><div class="two-col"><div class="panel" id="compAnalysis"></div><div class="panel" id="savedComps"></div></div></section>
+  <section id="view-matchup" class="view" hidden><div class="section-title"><div><h2>Matchup Analysis</h2><p>Compara rutas ofensivas y posibles respuestas; no calcula porcentajes de victoria.</p></div></div><div class="toolbar matchup-chooser"><label>Equipo A<select id="teamA" class="input"></select></label><label>Equipo B<select id="teamB" class="input"></select></label><button id="analyzeMatchup" class="btn primary">Analizar matchup</button></div><div id="matchupBody" class="panel"></div></section>
+  <section id="view-rules" class="view" hidden><div class="section-title"><div><h2>Reglas y pendientes</h2><p>Metodología, límites y datos de procedencia.</p></div></div><div id="rulesBody"></div></section>
+</main></div>
+<input id="fileInput" type="file" accept=".json,application/json" hidden/>
+<dialog id="confirmModal" class="modal"><div id="confirmBody"></div><div class="modal-actions"><button id="cancelModal" class="btn outline">Volver a revisar</button><button id="approveModal" class="btn primary">Confirmar decisión</button></div></dialog>
+<script type="module" src="./js/app.mjs"></script>
+</body></html>
