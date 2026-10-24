@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/mr/v0.8/matchup.schema.json",
+  "title": "MR v0.8 Matchup",
+  "$comment": "Identifiers and foreign keys validated by tools/validate.py; format checks enabled.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "kind": {
+      "const": "matchup"
+    },
+    "schemaVersion": {
+      "const": "0.8.0"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+    },
+    "patchId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+    },
+    "modelId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+    },
+    "modelRevision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "teamACompositionId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+    },
+    "teamBCompositionId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "mapId": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+        },
+        "sideA": {
+          "enum": [
+            "attack",
+            "defense",
+            "neutral",
+            "unspecified"
+          ]
+        },
+        "scenario": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "sideA"
+      ]
+    }
+  },
+  "required": [
+    "kind",
+    "schemaVersion",
+    "id",
+    "patchId",
+    "modelId",
+    "modelRevision",
+    "teamACompositionId",
+    "teamBCompositionId",
+    "context"
+  ]
+}

@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/mr/v0.8/report.schema.json",
+  "title": "MR v0.8 Report",
+  "$comment": "Identifiers and foreign keys validated by tools/validate.py; format checks enabled.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "kind": {
+      "const": "report"
+    },
+    "schemaVersion": {
+      "const": "0.8.0"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+    },
+    "matchupId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+    },
+    "engineVersion": {
+      "type": "string",
+      "minLength": 1
+    },
+    "rulepackId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+    },
+    "computedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "patchId": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+        },
+        "modelId": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+        },
+        "modelRevision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "teamACompositionId": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+        },
+        "teamBCompositionId": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+        }
+      },
+      "required": [
+        "patchId",
+        "modelId",
+        "modelRevision",
+        "teamACompositionId",
+        "teamBCompositionId"
+      ]
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+          },
+          "ruleId": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+          },
+          "direction": {
+            "enum": [
+              "internal-a",
+              "internal-b",
+              "a-to-b",
+              "b-to-a"
+            ]
+          },
+          "status": {
+            "enum": [
+              "uncontested-window",
+              "contested",
+              "infeasible-path",
+              "insufficient-data",
+              "resource-conflict",
+              "opportunity"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "explanation": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "sourceType": {
+                  "enum": [
+                    "assignment",
+                    "capability",
+                    "vulnerability",
+                    "dependency",
+                    "rule",
+                    "resource",
+                    "plan"
+                  ]
+                },
+                "sourceId": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+                },
+                "heroId": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+                }
+              },
+              "required": [
+                "sourceType",
+                "sourceId"
+              ]
+            }
+          },
+          "limitations": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "provenance": {
+            "const": "derived"
+          }
+        },
+        "required": [
+          "id",
+          "ruleId",
+          "direction",
+          "status",
+          "title",
+          "explanation",
+          "evidence",
+          "limitations",
+          "provenance"
+        ]
+      }
+    }
+  },
+  "required": [
+    "kind",
+    "schemaVersion",
+    "id",
+    "matchupId",
+    "engineVersion",
+    "rulepackId",
+    "computedAt",
+    "inputs",
+    "findings"
+  ]
+}

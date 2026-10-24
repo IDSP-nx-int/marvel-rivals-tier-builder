@@ -1,0 +1,180 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/mr/v0.8/composition.schema.json",
+  "title": "MR v0.8 Composition",
+  "$comment": "Identifiers and foreign keys validated by tools/validate.py; format checks enabled.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "kind": {
+      "const": "composition"
+    },
+    "schemaVersion": {
+      "const": "0.8.0"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+    },
+    "modelId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+    },
+    "modelRevision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "patchId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "slots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "heroId": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+          },
+          "assignmentId": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+          }
+        },
+        "required": [
+          "heroId",
+          "assignmentId"
+        ]
+      },
+      "minItems": 6,
+      "maxItems": 6
+    },
+    "winConditionPlans": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+          },
+          "mechanismId": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+          },
+          "participantHeroIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+            },
+            "minItems": 1,
+            "maxItems": 6
+          },
+          "targetZone": {
+            "enum": [
+              "objective",
+              "frontline",
+              "backline",
+              "off-angle",
+              "flexible"
+            ]
+          },
+          "windowId": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+          }
+        },
+        "required": [
+          "id",
+          "mechanismId",
+          "participantHeroIds",
+          "targetZone",
+          "windowId"
+        ]
+      }
+    },
+    "resourceClaims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "resourceId": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+          },
+          "consumerHeroId": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+          },
+          "amount": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "windowId": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+          }
+        },
+        "required": [
+          "resourceId",
+          "consumerHeroId",
+          "amount",
+          "windowId"
+        ]
+      }
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "mapId": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+        },
+        "side": {
+          "enum": [
+            "attack",
+            "defense",
+            "neutral",
+            "unspecified"
+          ]
+        },
+        "phase": {
+          "enum": [
+            "neutral",
+            "opening",
+            "sustain",
+            "overtime",
+            "unspecified"
+          ]
+        }
+      },
+      "required": [
+        "side",
+        "phase"
+      ]
+    }
+  },
+  "required": [
+    "kind",
+    "schemaVersion",
+    "id",
+    "modelId",
+    "modelRevision",
+    "patchId",
+    "title",
+    "slots",
+    "winConditionPlans",
+    "resourceClaims",
+    "context"
+  ]
+}
