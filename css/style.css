@@ -75,3 +75,24 @@
 .flex-bridge .bridge-label small{font-size:10px;color:#91b5cb}
 .flex-bridge .score-row{margin-bottom:4px}
 @media(max-width:750px){.subrole-guidance{min-height:0;font-size:10px}.flex-bridge .bridge-label small{display:block}}
+
+/* M1.7.2 — Mantener retratos animados dentro de las tarjetas */
+.portrait .face {
+  position: relative;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.portrait .face > img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-radius: inherit;
+  pointer-events: none;
+}
