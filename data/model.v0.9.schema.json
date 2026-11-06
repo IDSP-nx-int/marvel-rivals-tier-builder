@@ -1,0 +1,301 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/mr/v0.9/model.schema.json",
+  "title": "Marvel Rivals Tier Builder Model v0.9 — Four authored mechanical Likert scales",
+  "$comment": "Extends v0.8 without changing the 17 functional abilities. Compatibility via migrateModelToV09.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "kind": {
+      "const": "model"
+    },
+    "schemaVersion": {
+      "const": "0.9.0"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+    },
+    "patchId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "origin": {
+      "enum": [
+        "reference",
+        "personal"
+      ]
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "forkedFrom": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "modelId": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "modelId",
+        "revision"
+      ]
+    },
+    "eligibilityOverrides": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "heroId": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+          },
+          "subroleId": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+          },
+          "status": {
+            "enum": [
+              "eligible",
+              "ineligible"
+            ]
+          }
+        },
+        "required": [
+          "heroId",
+          "subroleId",
+          "status"
+        ]
+      }
+    },
+    "assignments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+          },
+          "heroId": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+          },
+          "subroleId": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+          },
+          "tier": {
+            "enum": [
+              "S",
+              "A",
+              "B",
+              "C",
+              "D"
+            ]
+          },
+          "locked": {
+            "type": "boolean"
+          },
+          "lockedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ratings": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+            },
+            "additionalProperties": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "state": {
+                      "const": "rated"
+                    },
+                    "score": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 5
+                    }
+                  },
+                  "required": [
+                    "state",
+                    "score"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "state": {
+                      "const": "not_applicable"
+                    }
+                  },
+                  "required": [
+                    "state"
+                  ]
+                }
+              ]
+            }
+          },
+          "vulnerabilities": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+            },
+            "additionalProperties": {
+              "enum": [
+                "present",
+                "absent"
+              ]
+            }
+          },
+          "dependencies": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+            },
+            "additionalProperties": {
+              "enum": [
+                "present",
+                "absent"
+              ]
+            }
+          },
+          "confidence": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ]
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "authoredBy": {
+            "const": "player"
+          },
+          "mechanicRatings": {
+            "type": "object",
+            "propertyNames": {
+              "enum": [
+                "effective-ttk",
+                "conversion-reliability",
+                "independent-agency",
+                "counterplay-sensitivity"
+              ]
+            },
+            "additionalProperties": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "state": {
+                      "const": "rated"
+                    },
+                    "score": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 5
+                    }
+                  },
+                  "required": [
+                    "state",
+                    "score"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "state": {
+                      "const": "not_applicable"
+                    }
+                  },
+                  "required": [
+                    "state"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "required": [
+          "id",
+          "heroId",
+          "subroleId",
+          "tier",
+          "locked",
+          "ratings",
+          "mechanicRatings",
+          "vulnerabilities",
+          "dependencies",
+          "authoredBy"
+        ],
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "locked": {
+                  "const": true
+                }
+              },
+              "required": [
+                "locked"
+              ]
+            },
+            "then": {
+              "required": [
+                "lockedAt"
+              ]
+            },
+            "else": {
+              "not": {
+                "required": [
+                  "lockedAt"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "required": [
+    "kind",
+    "schemaVersion",
+    "id",
+    "patchId",
+    "title",
+    "origin",
+    "revision",
+    "updatedAt",
+    "eligibilityOverrides",
+    "assignments"
+  ]
+}

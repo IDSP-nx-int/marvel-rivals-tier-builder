@@ -1,0 +1,20 @@
+{
+  "kind": "rank-band-rulepack",
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0-hypothesis.1",
+  "patchId": "patch.roster.2026-10-reference",
+  "calibrationStatus": "hypothesis-unvalidated",
+  "description": "Supuestos cualitativos calibrables sobre entornos de juego. No son mediciones empíricas por rango, ni tasas de victoria, ni tiers alternativos.",
+  "thresholds": {"strong": 4, "low": 2, "highResponse": 4, "weakResponse": 2},
+  "lenses": [
+    {"id":"climbing","label":"Subir en esta banda"},
+    {"id":"sustainable","label":"Progresión sostenible"}
+  ],
+  "bands": [
+    {"id":"bronze-gold","label":"Bronce–Oro","hypothesis":"Consistencia, supervivencia y autonomía bajo coordinación irregular.","environment":{"flankAwareness":1,"defensiveResponse":1,"coordination":1,"punishReliability":1,"adaptation":1}},
+    {"id":"platinum","label":"Platino","hypothesis":"Fundamentos, adaptación elemental y consistencia de ejecución.","environment":{"flankAwareness":2,"defensiveResponse":2,"coordination":2,"punishReliability":2,"adaptation":2}},
+    {"id":"diamond","label":"Diamante","hypothesis":"Hipótesis: picks rápidos y confiables pueden explotar rutas mal vigiladas; no todos los flancos son favorables.","environment":{"flankAwareness":2,"defensiveResponse":2,"coordination":3,"punishReliability":2,"adaptation":2}},
+    {"id":"grandmaster","label":"Grandmaster","hypothesis":"Mayor castigo de entradas predecibles, marcaje y adaptación de recursos.","environment":{"flankAwareness":4,"defensiveResponse":4,"coordination":4,"punishReliability":4,"adaptation":4}},
+    {"id":"celestial-plus","label":"Celestial+","hypothesis":"Neutral, respuestas anticipadas y coordinación más robusta, sin suponer perfección.","environment":{"flankAwareness":5,"defensiveResponse":5,"coordination":5,"punishReliability":5,"adaptation":5}}
+  ]
+}
