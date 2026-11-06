@@ -1,0 +1,16 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {newModel,newComposition,validateCompositionDraft} from '../js/core.mjs';
+const roster=JSON.parse(readFileSync(new URL('../data/roster.reference.json',import.meta.url)));
+const taxonomy=JSON.parse(readFileSync(new URL('../data/taxonomy.json',import.meta.url)));
+const m=newModel();
+const heroes=roster.heroes.filter(h=>h.categories.includes('duelist')).slice(0,6);
+const make=()=>{const c=newComposition(m);c.slots=heroes.map((h,i)=>({slot:i+1,heroId:h.id,subroleId:'subrole.main-dps'}));return c;};
+test('guardar/importar comp completa válida',()=>assert.deepEqual(validateCompositionDraft(make(),m,roster,taxonomy),[]));
+test('rechaza héroe duplicado incluso al importar',()=>{const c=make();c.slots[5].heroId=c.slots[0].heroId;assert.match(validateCompositionDraft(c,m,roster,taxonomy).join(' '),/dos plazas/)});
+test('rechaza número de plaza duplicado',()=>{const c=make();c.slots[5].slot=1;assert.match(validateCompositionDraft(c,m,roster,taxonomy).join(' '),/plaza/)});
+test('rechaza héroe no registrado',()=>{const c=make();c.slots[0].heroId='hero.not-in-roster';assert.match(validateCompositionDraft(c,m,roster,taxonomy).join(' '),/Héroe/)});
+test('rechaza subrol no válido',()=>{const c=make();c.slots[0].subroleId='subrole.main-support';assert.match(validateCompositionDraft(c,m,roster,taxonomy).join(' '),/subrol/)});
+test('rechaza import con parche distinto',()=>{const c=make();c.patchId='patch.unrelated';assert.match(validateCompositionDraft(c,m,roster,taxonomy).join(' '),/parche/)});
+test('rechaza composición incompleta',()=>{const c=make();c.slots.pop();assert.match(validateCompositionDraft(c,m,roster,taxonomy).join(' '),/seis/)});
