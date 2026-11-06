@@ -1,0 +1,128 @@
+{
+  "release": "M1.4",
+  "date": "2026-11-06",
+  "baseCommit": "a9a6f3c3b6c4cfef0bf76c482ebfb2a4010a9ade",
+  "expectedTests": 49,
+  "files": [
+    {
+      "path": "ASTRA_HANDOFF.md",
+      "sha256": "18ff8bc0657d27da94f93bbccbc4f980451c49711f1d831bfe5f4822e46cf55f",
+      "bytes": 4487,
+      "status": "modified"
+    },
+    {
+      "path": "ASTRA_INSTRUCCIONES_M1_4.txt",
+      "sha256": "18ff8bc0657d27da94f93bbccbc4f980451c49711f1d831bfe5f4822e46cf55f",
+      "bytes": 4487,
+      "status": "new"
+    },
+    {
+      "path": "README.md",
+      "sha256": "aa83cca3e4e14a001c5314f7ae07a39fc576269b5907f081b904288f6000a9da",
+      "bytes": 7657,
+      "status": "modified"
+    },
+    {
+      "path": "css/style.css",
+      "sha256": "be7bfe9b457bf33a5a25dc1d3212736e7dbd355db8da86f5a2a47572173e49a3",
+      "bytes": 17131,
+      "status": "modified"
+    },
+    {
+      "path": "data/rank-bands.v09.json",
+      "sha256": "2f9e4181012549a146bf7458ba766e684dba41966afa359f68dec6b12fcf1fa4",
+      "bytes": 5868,
+      "status": "new"
+    },
+    {
+      "path": "docs/CHANGELOG.md",
+      "sha256": "2d45cf9a94d95eb4ba7a754bdd44dc8c4b0979a24d922b7443edd63ceea198c9",
+      "bytes": 2582,
+      "status": "modified"
+    },
+    {
+      "path": "docs/Documento_Maestro_v2.0.docx",
+      "sha256": "56066db4544ebe05eea1413f76a185690d48980ff74da9733ff63051cd8c851a",
+      "bytes": 1801201,
+      "status": "new"
+    },
+    {
+      "path": "docs/Documento_Maestro_v2.0.pdf",
+      "sha256": "b3b31e8a213a5ba27e2b0778aff97a9707c3cab5fc2e94252e99a70a48a373c0",
+      "bytes": 1016780,
+      "status": "new"
+    },
+    {
+      "path": "docs/PUBLICATION_STATUS.md",
+      "sha256": "66313c5bc069c73f1f9b03fad643bdf10668a3c5fd168ee7827edacabad5f5cd",
+      "bytes": 1181,
+      "status": "modified"
+    },
+    {
+      "path": "docs/RANK_BAND_CURATOR_GUIDE.md",
+      "sha256": "4f0bdb0f1571ebd29d608998dfd744cd869fa3ed04304144b7241f121e7a03e2",
+      "bytes": 1688,
+      "status": "new"
+    },
+    {
+      "path": "docs/REVIEW_M1_4.md",
+      "sha256": "5a5e2ed86531595b2d46b700c7033c84ff09c8404060231ad7996b285d53a1fa",
+      "bytes": 1970,
+      "status": "new"
+    },
+    {
+      "path": "docs/TESTING_AND_TRACEABILITY.md",
+      "sha256": "91f7168c20a608f6aa05c89abd595e98022201e9a97db49e868058957a37b318",
+      "bytes": 4026,
+      "status": "modified"
+    },
+    {
+      "path": "index.html",
+      "sha256": "5a421163c129b1fb71dab570c72cb1521c4d38fc5b5eb3380a617eea69d909ff",
+      "bytes": 8518,
+      "status": "modified"
+    },
+    {
+      "path": "js/app.mjs",
+      "sha256": "998072de6f269c44bfe4a5259ae91e863d8826d73a6cf0d943d4951fddb54a08",
+      "bytes": 37956,
+      "status": "modified"
+    },
+    {
+      "path": "js/core.mjs",
+      "sha256": "0933fafef1b0a80c0906c8bfe3b09348f2610656ac42f9b6afe96bdf73037255",
+      "bytes": 18457,
+      "status": "modified"
+    },
+    {
+      "path": "js/rank-band.mjs",
+      "sha256": "58d2d5cbe4a3cd9b4615050045209c6ab9a924a8962fb79533527bf67917db85",
+      "bytes": 3435,
+      "status": "new"
+    },
+    {
+      "path": "package.json",
+      "sha256": "4e8f4a1efb54b664e8718df5b8b7e09b15f55a182014fc8f1a88ef80252b1990",
+      "bytes": 375,
+      "status": "modified"
+    },
+    {
+      "path": "tests/compositions.validation.test.mjs",
+      "sha256": "9c74e94132048668017708a7c0e36937301b2365f5fbea7aeda66586c1c9396c",
+      "bytes": 1776,
+      "status": "new"
+    },
+    {
+      "path": "tests/core.test.mjs",
+      "sha256": "24a8198b49a3887060f081acecfc6d7128efac7109e1d5dbc773bde6b1f78200",
+      "bytes": 17135,
+      "status": "modified"
+    },
+    {
+      "path": "tests/rank-band.test.mjs",
+      "sha256": "e8f164f8ccad2757057a72a610d8be884e6fea633022c226445f86ef3244268c",
+      "bytes": 2870,
+      "status": "new"
+    }
+  ]
+}
