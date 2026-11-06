@@ -1,4 +1,5 @@
-import {CATEGORIES,TIERS,STORE_KEY,newModel,clone,assignment,eligibility,compatible,setTier,removeAssignment,markNA,clearNA,updateRating,updateFlag,lockAssignment,dominanceWarnings,inferPriorities,validateModel,newComposition,compositionAnalysis,matchupAnalysis,toV08Composition} from './core.mjs';
+import {CATEGORIES,TIERS,STORE_KEY,newModel,clone,assignment,eligibility,compatible,setTier,placeWithinTier,stepWithinTier,removeAssignment,markNA,clearNA,updateRating,updateFlag,lockAssignment,dominanceWarnings,inferPriorities,validateModel,newComposition,compositionAnalysis,matchupAnalysis,toV08Composition,validateCompositionDraft} from './core.mjs';
+import {validateBandRulepack,curatedProfile,evaluateBand} from './rank-band.mjs';
 
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const esc=x=>String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
@@ -6,7 +7,7 @@ const opt=(id,title,selected)=>`<option value="${esc(id)}" ${selected===id?'sele
 const names={vanguard:'Tank',duelist:'DPS',strategist:'Support'};
 const labels={space:'Espacio',threat:'Amenaza',conversion:'Conversión',sustain:'Sustain',response:'Respuesta defensiva',mobility:'Movilidad/rotación',enablement:'Habilitación'};
 const defaultPatch='patch.roster.2026-10-reference';
-const state={roster:null,taxonomy:null,model:null,category:'duelist',selected:null,expanded:false,compositions:[],currentComp:null,availableArt:new Set(),activeView:'rankings',saveTimer:null};
+const state={roster:null,taxonomy:null,model:null,category:'duelist',selected:null,expanded:false,compositions:[],currentComp:null,availableArt:new Set(),bandPack:null,bandId:'diamond',bandLens:'climbing',activeView:'rankings',saveTimer:null};
 function notify(msg){const x=$('#status');x.textContent=msg;x.classList.add('visible');clearTimeout(state.saveTimer);state.saveTimer=setTimeout(()=>x.classList.remove('visible'),4200);}
 function persist(){try{localStorage.setItem(STORE_KEY,JSON.stringify({model:state.model,compositions:state.compositions}));}catch(e){notify('Almacenamiento bloqueado o lleno: exporta un respaldo JSON.');}}
 function displayName(heroId){return state.roster.heroes.find(h=>h.id===heroId)?.name||'Héroe desconocido';}
@@ -27,7 +28,26 @@ function pick(heroId,subroleId){
  if(s&&!compatible(hero,s))return notify('Héroe incompatible con ese subrol');
  state.selected={heroId,subroleId:s?.id||fallback.id};state.expanded=false;renderRankings();
 }
+function renderBandSelector(){
+ const pack=state.bandPack;if(!pack)return;
+ const band=pack.bands.find(x=>x.id===state.bandId)||pack.bands[0];
+ $('#bandSelect').innerHTML=pack.bands.map(b=>opt(b.id,b.label,state.bandId)).join('');
+ $('#bandLens').innerHTML=pack.lenses.map(x=>opt(x.id,x.label,state.bandLens)).join('');
+ $('#bandHypothesis').textContent=band.hypothesis;
+}
+function curatedRows(hero,subrole){
+ const pack=state.bandPack;if(!pack)return '';
+ const ids=pack.suggestedTraitsBySubrole[subrole.id]||[];
+ const labels=Object.fromEntries(pack.traitDefinitions.map(x=>[x.id,x.label]));
+ const profile=curatedProfile(pack,hero.id,subrole.id,state.model.patchId);
+ const report=evaluateBand(pack,hero.id,subrole.id,state.model.patchId,state.bandId,state.bandLens);
+ return `<div class="curated-qualities"><h4>Impacto por rango <span class="badge none">Curado por el sistema · no editable</span></h4>
+  ${ids.map(id=>`<div class="curated-quality-row"><span title="${esc(pack.traitDefinitions.find(t=>t.id===id)?.meaning||'')}">${esc(labels[id])}</span><span class="pending">${profile?esc(profile.qualities[id]+'/5'):'Pendiente de curación'}</span></div>`).join('')}
+  <p class="context-reading">${esc(report.state==='unknown'?report.reason:report.reading+' · '+report.warning)}</p>
+ </div>`;
+}
 function renderRankings(){
+ renderBandSelector();
  $$('.category-tab').forEach(b=>b.classList.toggle('active',b.dataset.category===state.category));
  const subs=state.taxonomy.subroles.filter(s=>s.category===state.category);
  $('#boards').innerHTML=subs.map((s,i)=>`<section class="subboard ${['main','off','flex'][i]}" data-subrole="${esc(s.id)}"><div class="board-head"><h3><i class="dot"></i>${esc(s.label)}</h3><small>Tier S → D</small></div>${TIERS.map(t=>{
@@ -45,6 +65,8 @@ function renderEditor(){
  if(!hero||!s||s.category!==state.category){state.selected=null;return renderEditor();}
  const a=assignment(state.model,sel.heroId,sel.subroleId),status=eligibility(state.model,sel.heroId,sel.subroleId),readOnly=state.model.origin==='reference';
  const disabled=a?.locked||readOnly;
+ const peers=a?state.model.assignments.filter(x=>x.subroleId===sel.subroleId&&x.tier===a.tier):[];
+ const orderPosition=a?peers.findIndex(x=>x.heroId===sel.heroId):-1;
  const current=a?.tier||'Pendiente';
  const pct=state.model.assignments.filter(x=>x.subroleId===s.id&&x.locked).length;
  const inference=inferPriorities(state.model,s.id,s.coreCapabilities);
@@ -53,17 +75,28 @@ function renderEditor(){
  const more=state.expanded?`<div class="extended"><h4>Más capacidades (opcionales)</h4>${extra.map(c=>scoreRow(c.id,a,disabled)).join('')}<h4>Vulnerabilidades y dependencias adicionales</h4><div class="two-col"><div>${state.taxonomy.vulnerabilities.filter(v=>!s.suggestedVulnerabilities.includes(v.id)).map(v=>flagRow('vulnerabilities',v.id,a,disabled)).join('')}</div><div>${state.taxonomy.dependencies.filter(v=>!s.suggestedDependencies.includes(v.id)).map(v=>flagRow('dependencies',v.id,a,disabled)).join('')}</div></div><h4>Justificación (opcional)</h4><textarea id="noteInput" class="note" maxlength="2000" ${disabled?'disabled':''}>${esc(a?.note||'')}</textarea><label class="title-sm">Confianza <select id="confidenceInput" class="input select-mini" ${disabled?'disabled':''}>${opt('','Sin indicar',a?.confidence||'')}${['low','medium','high'].map(x=>opt(x,{low:'Baja',medium:'Media',high:'Alta'}[x],a?.confidence)).join('')}</select></label></div>`:'';
  $('#editor').innerHTML=`
  <div class="editor-top"><div class="big-icon">${esc(hero.name.split(' ').map(x=>x[0]).slice(0,2).join('').toUpperCase())}</div><div><h3>Evaluación rápida · ${esc(hero.name)}</h3><p>${esc(s.label)} · Tier <b>${esc(current)}</b> · ${a?.locked?'Bloqueado':status==='ineligible'?'N/A':'Editable / sin evaluar'}</p></div><div class="editor-badge"><span class="badge ${a?.locked?'good':'none'}">${a?.locked?'🔒 Confirmado':a?'Borrador':'Sin clasificar'}</span></div></div>
- <div class="editor-body"><div class="editor-col"><h4>Asignación funcional</h4><p>Selecciona un tier en la columna de ${esc(s.label)}. La clasificación puede guardarse sin Likert.</p><div class="detail"><strong>Tier ${esc(current)}</strong>${status==='ineligible'?'<span class="mark-na">N/A explícito</span>':'<span class="muted">No hay penalización por datos incompletos.</span>'}</div><div class="detail"><strong>Prioridades del subrol</strong><p>${pct} perfiles bloqueados · ${inference.pairs} pares comparables</p><p>${pct<2?'Sin inferencia suficiente':inference.signals.map(x=>capName(x.capId)+': '+(x.concordance==null?'sin contraste':x.agree+' favor / '+x.disagree+' contra')+(inference.weights?' · '+(100*inference.weights[x.capId]).toFixed(1)+'% exp.':'' )).join('<br>')}</p></div></div>
- <div class="editor-col"><h4>Likert sugeridos · 1 a 5 <span class="muted">(opcional)</span></h4>${metrics}<p class="hint">Una selección es la evaluación declarada. «N/A» no es lo mismo que no haber evaluado.</p></div>
+ <div class="editor-body"><div class="editor-col"><h4>Asignación funcional</h4><p>Selecciona un tier en la columna de ${esc(s.label)}. La clasificación puede guardarse sin Likert.</p><div class="detail"><strong>Tier ${esc(current)}</strong>${status==='ineligible'?'<span class="mark-na">N/A explícito</span>':'<span class="muted">No hay penalización por datos incompletos.</span>'}</div><div class="detail"><strong>Prioridades del subrol <span class="badge none">Exploratorio</span></strong><p>${inference.observations} perfiles completos y bloqueados · ${inference.pairs} pares entre tiers · ${inference.withinPairs} pares dentro del tier</p><p>${inference.observations<2?'Sin comparaciones suficientes':inference.signals.map(x=>`${esc(capName(x.capId))}: <b>tiers</b> ${x.agree} favor / ${x.disagree} contra · <b>mismo tier</b> ${x.intraAgree} favor / ${x.intraDisagree} contra`+(inference.weights?' · <b>'+(100*inference.weights[x.capId]).toFixed(1)+'%</b> descriptivo':'' )).join('<br>')}</p><p class="hint">El orden de izquierda a derecha entre perfiles bloqueados cuenta como preferencia intratier. Cuando se estiman pesos, la señal entre tiers domina (80 %) y la intratier complementa (20 %). Los empates Likert no aportan preferencia; los pesos no cambian los tiers y no son evidencia del meta real.</p></div></div>
+ <div class="editor-col"><h4>Likert sugeridos · 1 a 5 <span class="muted">(opcional)</span></h4>${metrics}<p class="hint">Una selección es la evaluación declarada. «N/A» no es lo mismo que no haber evaluado.</p>${curatedRows(hero,s)}</div>
  <div class="editor-col"><h4>Vulnerabilidades</h4>${s.suggestedVulnerabilities.map(id=>flagRow('vulnerabilities',id,a,disabled)).join('')}<h4 style="margin-top:13px">Dependencias</h4>${s.suggestedDependencies.map(id=>flagRow('dependencies',id,a,disabled)).join('')}<p class="hint">? = desconocido; Sí = presente; No = ausente.</p></div></div>
  ${more}
- <div class="editor-actions"><button class="btn outline" data-action="toggleExtra">${state.expanded?'− Ocultar opciones':'+ Más capacidades y restricciones'}</button>${a?`<button class="btn soft" data-action="save">Guardar cambios</button><button class="btn primary" data-action="toggleLock" ${readOnly?'disabled':''}>${a.locked?'Desbloquear':'🔒 Bloquear tier'}</button><button class="btn negative" data-action="remove" ${a.locked||readOnly?'disabled':''}>Quitar de ${esc(s.label)}</button>`:''}<button class="btn outline" data-action="toggleNA" ${disabled?'disabled':''}>${status==='ineligible'?'Quitar N/A':'Marcar N/A'}</button><span class="hint">Cambios guardados localmente · Exporta JSON para respaldar</span></div>`;
+ <div class="editor-actions">${a?`<span class="tier-order-label">Orden ${orderPosition+1} de ${peers.length} en ${esc(a.tier)}</span><button class="btn outline small" data-action="moveEarlier" ${readOnly||orderPosition<=0?'disabled':''} aria-label="Mover antes dentro del mismo tier">← Antes</button><button class="btn outline small" data-action="moveLater" ${readOnly||orderPosition>=peers.length-1?'disabled':''} aria-label="Mover después dentro del mismo tier">Después →</button>`:''}<button class="btn outline" data-action="toggleExtra">${state.expanded?'− Ocultar opciones':'+ Más capacidades y restricciones'}</button>${a?`<button class="btn soft" data-action="save">Guardar cambios</button><button class="btn primary" data-action="toggleLock" ${readOnly?'disabled':''}>${a.locked?'Desbloquear':'🔒 Bloquear tier'}</button><button class="btn negative" data-action="remove" ${a.locked||readOnly?'disabled':''}>Quitar de ${esc(s.label)}</button>`:''}<button class="btn outline" data-action="toggleNA" ${disabled?'disabled':''}>${status==='ineligible'?'Quitar N/A':'Marcar N/A'}</button><span class="hint">Cambios guardados localmente · Exporta JSON para respaldar</span></div>`;
 }
 function scoreRow(id,a,disabled){const v=a?.ratings[id],score=v?.state==='rated'?v.score:0,na=v?.state==='not_applicable';return `<div class="score-row"><span class="metric" title="${esc(state.taxonomy.capabilities.find(c=>c.id===id)?.definition||'')}">${esc(capName(id))}</span><div class="score-btns">${[1,2,3,4,5].map(i=>`<button class="score-btn ${score===i?'on':''}" data-score="${i}" data-cap="${esc(id)}" ${!a||disabled?'disabled':''} aria-label="${esc(capName(id))}: ${i} de 5">${i}</button>`).join('')}<button class="score-btn ${na?'na':''}" data-score="na" data-cap="${esc(id)}" ${!a||disabled?'disabled':''} title="No aplicable">N/A</button><button class="score-btn" data-score="unknown" data-cap="${esc(id)}" ${!a||disabled?'disabled':''} title="Sin evaluar">×</button></div></div>`;}
 function flagRow(kind,id,a,disabled){const v=a?.[kind]?.[id]||'unknown';return `<label class="flag-row"><span>${esc(flagName(kind,id))}</span><select data-flag="${esc(kind)}" data-flag-id="${esc(id)}" ${!a||disabled?'disabled':''}>${opt('unknown','? Sin evaluar',v)}${opt('present','Sí',v)}${opt('absent','No',v)}</select></label>`;}
-function handleTier(heroId,subroleId,tier){
+function handleTier(heroId,subroleId,tier,position=null){
  const a=assignment(state.model,heroId,subroleId);
- try{setTier(state.model,heroId,subroleId,tier,state.roster,state.taxonomy);state.selected={heroId,subroleId};state.expanded=false;persist();renderRankings();notify(`Clasificado: ${displayName(heroId)} · ${sr(subroleId).label} · ${tier}`);}catch(e){notify(e.message);if(a?.locked)pick(heroId,subroleId);}
+ try{
+  if(!a||a.tier!==tier){
+   setTier(state.model,heroId,subroleId,tier,state.roster,state.taxonomy);
+   // En otro tier, el héroe llega al final a menos que se suelte antes/después de otro.
+   placeWithinTier(state.model,heroId,subroleId,position?.relativeToHeroId||null,position?.placement||'end');
+  }else if(position){
+   // Permite reordenar un perfil bloqueado sin cambiar tier, Likert ni restricciones.
+   placeWithinTier(state.model,heroId,subroleId,position.relativeToHeroId||null,position.placement||'end');
+  }
+  state.selected={heroId,subroleId};state.expanded=false;persist();renderRankings();
+  notify(`Posición actualizada: ${displayName(heroId)} · ${sr(subroleId).label} · ${tier}`);
+ }catch(e){notify(e.message);if(a?.locked)pick(heroId,subroleId);}
 }
 function renderOverview(){const m=state.model,ranked=m.assignments.length,locked=m.assignments.filter(a=>a.locked).length,complete=m.assignments.filter(a=>sr(a.subroleId)?.coreCapabilities.every(c=>a.ratings[c]?.state==='rated')).length;
  $('#overviewBody').innerHTML=`<div class="stats"><div class="stat"><strong>${ranked}</strong><small>Asignaciones Hero × Subrole</small></div><div class="stat"><strong>${locked}</strong><small>Tiers confirmados</small></div><div class="stat"><strong>${complete}</strong><small>Perfiles con tres Likert</small></div><div class="stat"><strong>${state.compositions.length}</strong><small>Composiciones guardadas</small></div></div><div class="two-col"><div class="panel"><h3>Modelo activo: ${esc(m.title)}</h3><p class="muted">Parche: ${esc(m.patchId)} · Revisión ${m.revision} · ${m.origin==='reference'?'Referencia de solo lectura':'Personal editable'}</p><p>Los rankings expresan tu criterio. Una clasificación sin perfil no se usa para inferir prioridades.</p><div class="toolbar"><input id="modelTitleInput" class="input" maxlength="150" value="${esc(m.title)}" ${m.origin==='reference'?'disabled':''} aria-label="Título del modelo"/><button class="btn soft" id="renameModel" ${m.origin==='reference'?'disabled':''}>Renombrar</button><button class="btn outline" id="exportModel">Exportar modelo v0.8</button><button class="btn primary" data-nav="rankings">Abrir rankings</button></div></div><div class="panel"><h3>Estado de confianza</h3><p>Los pesos por subrol son asociaciones descriptivas. La validación de prioridades y las sinergias reales requieren más evidencia y reglas versionadas.</p><div class="disclaimer">El roster es una referencia de octubre de 2026. No incluye ratings reales de temporada.</div></div></div>`;}
@@ -89,11 +122,15 @@ function runMatchup(){const a=state.compositions.find(c=>c.id===$('#teamA').valu
  const r=matchupAnalysis(a,b,state.model);
  $('#matchupBody').innerHTML=`<h3>${esc(a.title)} vs. ${esc(b.title)}</h3><p class="disclaimer">Sin geometría, cooldowns, metadatos de habilidades o evaluación de perfiles completos, no se infiere quién gana.</p><div class="two-col"><div><h3>Equipo A → B</h3>${r.teamA.map(x=>`<div class="detail"><strong>${esc(x.name)} <span class="badge ${x.status==='contested-potential'?'warning':'none'}">${x.status==='contested-potential'?'Potencialmente disputada':'Datos insuficientes'}</span></strong><p>${esc(x.reason)}</p></div>`).join('')}</div><div><h3>Equipo B → A</h3>${r.teamB.map(x=>`<div class="detail"><strong>${esc(x.name)} <span class="badge ${x.status==='contested-potential'?'warning':'none'}">${x.status==='contested-potential'?'Potencialmente disputada':'Datos insuficientes'}</span></strong><p>${esc(x.reason)}</p></div>`).join('')}</div></div>`;
 }
-function renderRules(){$('#rulesBody').innerHTML=`<div class="rule-grid"><div class="panel"><h3>Jerarquía metodológica</h3><p>Hero × Subrole × Model × Patch es la unidad de evaluación. El tier es una decisión humana y no una suma de Likert. Un mismo héroe admite distintas posiciones Main/Off/Flex.</p><p>Escala 1–5: marginal, limitada, funcional, fuerte y excepcional. La capacidad sin evaluar no equivale a 1/5 ni a cero.</p><p>N/A es una exclusión explícita; sin clasificación es pendiente.</p></div><div class="panel"><h3>Consistency & Priority</h3><p>Las advertencias de dominancia comparan únicamente evaluaciones completas y bloqueadas del mismo subrol, sin convertirlas en verdades del meta.</p><p>La asociación por pares permite explorar prioridades, pero con el roster pequeño no se impone una muestra n≥20 ni se reclaman pesos confiables.</p></div><div class="panel"><h3>Composition & Matchup</h3><p>Los módulos de cobertura y win conditions usan solo capacidades puntuadas, sin inventar alcance, cooldowns, disponibilidad de recursos o coincidencia de objetivos. Las reglas específicas de habilidades y Team-Ups quedan pendientes.</p><p>El análisis contextual no estima probabilidades de victoria ni penaliza composiciones distintas de 2–2–2.</p></div><div class="panel"><h3>Documentos y procedencia</h3><p><a href="./docs/Documento_Maestro_v1.0.pdf" target="_blank" rel="noopener">Documento Maestro de Trazabilidad (PDF)</a></p><p><a href="./docs/mockup_tres_subroles.png" target="_blank" rel="noopener">Referencia visual: tres subroles simultáneos</a></p><p><a href="./data/roster.sources.md" target="_blank" rel="noopener">Procedencia del roster</a></p><p><a href="./legacy/v0.8/README.md" target="_blank" rel="noopener">Contratos originales v0.8</a></p></div><div class="panel"><h3>Datos personales</h3><p>Los datos se guardan exclusivamente en localStorage y pueden perderse al borrar datos del navegador. No se sincronizan entre equipos. Exportar/Importar crea respaldo manual.</p><p><button id="newEmptyModel" class="btn outline">Crear modelo vacío</button> <button id="forkButton" class="btn soft" ${state.model.origin==='personal'?'disabled':''}>Crear copia personal</button></p></div><div class="panel"><h3>Pendientes de implementación</h3><p>Retratos Lord autorizados y locales; catálogo real de habilidades por parche; ventanas, recursos, Team-Ups; avisos ampliados; pruebas end-to-end y mejoras de accesibilidad; generación/exportación de reportes persistentes.</p><p>El catálogo v0.8 original usa categoría única. El runtime añade compatibilidad multirrol para Deadpool sin alterar ese contrato; pendiente versionar una evolución del esquema.</p></div></div>`;}
+function renderRules(){$('#rulesBody').innerHTML=`<div class="rule-grid"><div class="panel"><h3>Jerarquía metodológica</h3><p>Hero × Subrole × Model × Patch es la unidad de evaluación. El tier es una decisión humana y no una suma de Likert. Un mismo héroe admite distintas posiciones Main/Off/Flex.</p><p>Escala 1–5: marginal, limitada, funcional, fuerte y excepcional. La capacidad sin evaluar no equivale a 1/5 ni a cero.</p><p>N/A es una exclusión explícita; sin clasificación es pendiente.</p></div><div class="panel"><h3>Consistency & Priority</h3><p>Las advertencias de dominancia comparan únicamente evaluaciones completas y bloqueadas del mismo subrol, sin convertirlas en verdades del meta.</p><p>La asociación por pares utiliza preferencias entre tiers y, de forma secundaria, el orden de izquierda a derecha dentro del mismo tier. Solo compara perfiles bloqueados con los tres Likert comunes evaluados. Los pesos exploratorios combinan 80 % de la señal entre tiers y 20 % intratier cuando ambas existen; reordenar puede cambiar estos pesos, nunca las posiciones S–D.</p><p>Con un roster pequeño no se impone una muestra n≥20 ni se reclaman pesos confiables. El orden de inserción también es visible: revisa el orden del tier antes de bloquear para que exprese tu preferencia deliberada.</p></div><div class="panel"><h3>Composition & Matchup</h3><p>Los módulos de cobertura y win conditions usan solo capacidades puntuadas, sin inventar alcance, cooldowns, disponibilidad de recursos o coincidencia de objetivos. Las reglas específicas de habilidades y Team-Ups quedan pendientes.</p><p>El análisis contextual no estima probabilidades de victoria ni penaliza composiciones distintas de 2–2–2. El contexto por banda v0.9 es una hipótesis calibrable independiente del tier idealizado; no genera valor por héroe sin perfil mecánico curado, versionado y documentado.</p></div><div class="panel"><h3>Documentos y procedencia</h3><p><a href="./docs/Documento_Maestro_v2.0.pdf" target="_blank" rel="noopener">Documento Maestro v2.0 (PDF)</a></p><p><a href="./docs/mockup_tres_subroles.png" target="_blank" rel="noopener">Referencia visual: tres subroles simultáneos</a></p><p><a href="./data/roster.sources.md" target="_blank" rel="noopener">Procedencia del roster</a></p><p><a href="./legacy/v0.8/README.md" target="_blank" rel="noopener">Contratos originales v0.8</a></p></div><div class="panel"><h3>Datos personales</h3><p>Los datos se guardan exclusivamente en localStorage y pueden perderse al borrar datos del navegador. No se sincronizan entre equipos. Exportar/Importar crea respaldo manual.</p><p><button id="newEmptyModel" class="btn outline">Crear modelo vacío</button> <button id="forkButton" class="btn soft" ${state.model.origin==='personal'?'disabled':''}>Crear copia personal</button></p></div><div class="panel"><h3>Pendientes de implementación</h3><p>Retratos Lord autorizados y locales; catálogo real de habilidades por parche; ventanas, recursos, Team-Ups; avisos ampliados; pruebas end-to-end y mejoras de accesibilidad; generación/exportación de reportes persistentes.</p><p>El catálogo v0.8 original usa categoría única. El runtime añade compatibilidad multirrol para Deadpool sin alterar ese contrato; pendiente versionar una evolución del esquema.</p></div></div>`;}
 function setPage(name){state.activeView=name;$$('.view').forEach(v=>v.hidden=v.id!==`view-${name}`);$$('.nav').forEach(b=>b.classList.toggle('active',b.dataset.page===name));if(name==='overview')renderOverview();if(name==='rankings')renderRankings();if(name==='composition')renderComposition();if(name==='matchup')renderMatchup();if(name==='rules')renderRules();}
 function exportBackup(){const backup={kind:'tier-builder-backup',backupVersion:'1.0.0',exportedAt:new Date().toISOString(),rosterVersion:state.roster.rosterVersion,model:state.model,compositions:state.compositions,contractCompositions:state.compositions.map(c=>toV08Composition(c,state.model)).filter(Boolean)};download(backup,'marvel-rivals-tier-builder-backup.json');}
 function download(data,name){const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);}
-function validateCompositions(list,m){const errors=[];if(!Array.isArray(list))return ['Composiciones inválidas'];for(const c of list){if(c.kind!=='composition-draft'||c.schemaVersion!=='1.0.0')errors.push('Formato de borrador desconocido');if(c.modelId!==m.id||c.patchId!==m.patchId)errors.push('Modelo o parche de composición incompatible');if(!Array.isArray(c.slots)||c.slots.length!==6)errors.push('Cada composición requiere seis plazas');for(const s of c.slots||[]){if(!s.heroId&&!s.subroleId)continue;const h=state.roster.heroes.find(x=>x.id===s.heroId);if(!compatible(h,sr(s.subroleId)))errors.push('Héroe / subrol inválido en composición');}}return errors;}
+function validateCompositions(list,m){
+ if(!Array.isArray(list))return ['Composiciones inválidas'];
+ return list.flatMap((c,i)=>validateCompositionDraft(c,m,state.roster,state.taxonomy).map(e=>`Composición ${i+1}: ${e}`));
+}
+
 async function handleImport(file){try{if(file.size>2000000)throw new Error('El archivo supera 2 MB.');const input=JSON.parse(await file.text());let model,comps=[];
  if(input.kind==='tier-builder-backup'){model=input.model;comps=input.compositions||[];}else if(input.kind==='model')model=input;else throw new Error('Se espera un modelo v0.8 o un respaldo de Tier Builder.');
  const errors=[...validateModel(model,state.roster,state.taxonomy,defaultPatch),...validateCompositions(comps,model)];if(errors.length)throw new Error(errors.slice(0,4).join(' · '));
@@ -105,21 +142,46 @@ function bindUI(){
  $('#mainNav').addEventListener('click',e=>{const b=e.target.closest('[data-page]');if(b)setPage(b.dataset.page);});
  $('#importBtn').onclick=()=>$('#fileInput').click();$('#fileInput').onchange=e=>{const f=e.target.files?.[0];if(f)handleImport(f);};$('#exportBtn').onclick=exportBackup;
  $('#heroSearch').addEventListener('input',renderRankings);
+ $('#bandSelect').onchange=e=>{state.bandId=e.target.value;renderRankings();};
+ $('#bandLens').onchange=e=>{state.bandLens=e.target.value;renderRankings();};
  $$('.category-tab').forEach(b=>b.onclick=()=>{state.category=b.dataset.category;state.selected=null;state.expanded=false;$('#heroSearch').value='';renderRankings();});
  $('#boards').addEventListener('click',e=>{const p=e.target.closest('.portrait');if(p){pick(p.dataset.hero,p.dataset.sourceSubrole);return;}const row=e.target.closest('.tier');if(!row)return;if(!state.selected)return notify('Primero selecciona un héroe del catálogo.');handleTier(state.selected.heroId,row.dataset.targetSubrole,row.dataset.tier);});
  $('#heroPool').addEventListener('click',e=>{const p=e.target.closest('.portrait');if(p)pick(p.dataset.hero,null);});
  $('#heroPool').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const p=e.target.closest('.portrait');if(p){e.preventDefault();pick(p.dataset.hero,null);}}});
  $('#boards').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const p=e.target.closest('.portrait');if(p){e.preventDefault();pick(p.dataset.hero,p.dataset.sourceSubrole);return;}const row=e.target.closest('.tier');if(row&&state.selected){e.preventDefault();handleTier(state.selected.heroId,row.dataset.targetSubrole,row.dataset.tier);}}});
- for(const target of ['#heroPool','#boards'])$(target).addEventListener('dragstart',e=>{const p=e.target.closest('.portrait');if(p)e.dataTransfer.setData('text/plain',p.dataset.hero);});
- $('#boards').addEventListener('dragover',e=>{const row=e.target.closest('.tier');if(row){e.preventDefault();e.dataTransfer.dropEffect='move';row.classList.add('over');}});
- $('#boards').addEventListener('dragleave',e=>{const row=e.target.closest('.tier');if(row)row.classList.remove('over');});
- $('#boards').addEventListener('drop',e=>{const row=e.target.closest('.tier');if(!row)return;e.preventDefault();row.classList.remove('over');const id=e.dataTransfer.getData('text/plain');if(id)handleTier(id,row.dataset.targetSubrole,row.dataset.tier);});
+ for(const target of ['#heroPool','#boards'])$(target).addEventListener('dragstart',e=>{
+  const p=e.target.closest('.portrait');if(p){e.dataTransfer.setData('text/plain',p.dataset.hero);e.dataTransfer.effectAllowed='move';}
+ });
+ // Marcador visual para indicar la posición exacta dentro del tier.
+ const clearDragGuides=()=>{$$('#boards .tier.over').forEach(x=>x.classList.remove('over'));$$('#boards .portrait.drop-before, #boards .portrait.drop-after').forEach(x=>x.classList.remove('drop-before','drop-after'));};
+ for(const target of ['#heroPool','#boards'])$(target).addEventListener('dragend',clearDragGuides);
+ $('#boards').addEventListener('dragover',e=>{
+  const row=e.target.closest('.tier');if(!row)return;
+  e.preventDefault();e.dataTransfer.dropEffect='move';clearDragGuides();row.classList.add('over');
+  const p=e.target.closest('.portrait');
+  if(p){const rect=p.getBoundingClientRect();p.classList.add(e.clientX<rect.left+rect.width/2?'drop-before':'drop-after');}
+ });
+ $('#boards').addEventListener('dragleave',e=>{if(!e.relatedTarget||!e.currentTarget.contains(e.relatedTarget))clearDragGuides();});
+ $('#boards').addEventListener('drop',e=>{
+  const row=e.target.closest('.tier');if(!row)return;e.preventDefault();
+  const id=e.dataTransfer.getData('text/plain');
+  const p=e.target.closest('.portrait');
+  let position={placement:'end'};
+  if(p){const rect=p.getBoundingClientRect();position={relativeToHeroId:p.dataset.hero,placement:e.clientX<rect.left+rect.width/2?'before':'after'};}
+  clearDragGuides();
+  if(id)handleTier(id,row.dataset.targetSubrole,row.dataset.tier,position);
+ });
  $('#editor').addEventListener('click',e=>{
   const sel=state.selected;if(!sel)return;
   const score=e.target.closest('[data-score]');if(score){try{const s=score.dataset.score;updateRating(state.model,sel.heroId,sel.subroleId,score.dataset.cap,s==='na'?'not_applicable':s==='unknown'?'unknown':'rated',s==='na'||s==='unknown'?null:Number(s),state.taxonomy);persist();renderEditor();}catch(x){notify(x.message);}return;}
   const b=e.target.closest('[data-action]');if(!b)return;
   const action=b.dataset.action,a=assignment(state.model,sel.heroId,sel.subroleId);
   try{
+   if(action==='moveEarlier'||action==='moveLater'){
+    const moved=stepWithinTier(state.model,sel.heroId,sel.subroleId,action==='moveEarlier'?-1:1);
+    if(moved){persist();renderRankings();notify('Orden intratier guardado.');}
+    return;
+   }
    if(action==='toggleExtra'){state.expanded=!state.expanded;renderEditor();return;}
    if(action==='save'){persist();notify('Cambios guardados en este navegador. Exporta un respaldo si deseas conservarlos fuera de él.');return;}
    if(action==='toggleLock'){
@@ -144,7 +206,7 @@ function bindUI(){
   else slot.subroleId=e.target.value||null;renderComposition();
  });
  $('#exampleComp').onclick=()=>{const heroes=['Magneto','Venom','Hela','Elsa Bloodstone','Luna Snow','Mantis'];const roles=['subrole.main-tank','subrole.off-tank','subrole.main-dps','subrole.off-dps','subrole.main-support','subrole.off-support'];state.currentComp.slots=heroes.map((name,i)=>({slot:i+1,heroId:state.roster.heroes.find(h=>h.name===name)?.id||null,subroleId:roles[i]}));state.currentComp.title='Ejemplo de composición — sin evaluaciones';renderComposition();notify('Solo se rellenaron los nombres; no se atribuyó ningún tier o capacidad.');};
- $('#saveComp').onclick=()=>{const c=state.currentComp,ids=c.slots.map(x=>x.heroId);if(ids.some(x=>!x)||new Set(ids).size!==6||c.slots.some(x=>!x.subroleId))return notify('Completa seis héroes únicos con funciones válidas.');c.title=($('#compTitle').value||'Composición sin título').trim();const cloneComp=clone(c);cloneComp.id='comp.local.'+Date.now();cloneComp.modelRevision=state.model.revision;state.compositions.push(cloneComp);persist();renderSavedComps();notify('Composición guardada.');};
+ $('#saveComp').onclick=()=>{const c=state.currentComp,ids=c.slots.map(x=>x.heroId);const errors=validateCompositionDraft(c,state.model,state.roster,state.taxonomy);if(errors.length)return notify('No se puede guardar: '+errors[0]);c.title=($('#compTitle').value||'Composición sin título').trim();const cloneComp=clone(c);cloneComp.id='comp.local.'+Date.now();cloneComp.modelRevision=state.model.revision;state.compositions.push(cloneComp);persist();renderSavedComps();notify('Composición guardada.');};
  $('#savedComps').onclick=e=>{const del=e.target.closest('[data-remove-comp]'),load=e.target.closest('[data-load-comp]');if(del){if(confirm('¿Eliminar esta composición guardada?')){state.compositions=state.compositions.filter(x=>x.id!==del.dataset.removeComp);persist();renderSavedComps();}}else if(load){const c=state.compositions.find(x=>x.id===load.dataset.loadComp);if(c){state.currentComp=clone(c);renderComposition();notify('Se cargó una copia editable. Guardar creará una nueva versión.');}}};
  $('#analyzeMatchup').onclick=runMatchup;
  $('#view-rules').onclick=e=>{if(e.target.closest('#newEmptyModel')){if(confirm('¿Crear modelo vacío? Exporta antes el trabajo actual; se borrarán los datos locales.')){state.model=newModel(defaultPatch);state.compositions=[];state.currentComp=newComposition(state.model);state.selected=null;persist();setPage('rankings');notify('Modelo nuevo creado.');}}
@@ -156,7 +218,7 @@ function bindUI(){
  $('#cancelModal').onclick=()=>$('#confirmModal').close();
 }
 async function init(){try{
- const [r,t,manifest]=await Promise.all([fetch('./data/roster.reference.json').then(x=>{if(!x.ok)throw new Error('roster');return x.json();}),fetch('./data/taxonomy.json').then(x=>{if(!x.ok)throw new Error('taxonomía');return x.json();}),fetch('./assets/heroes/manifest.json').then(x=>x.json()).catch(()=>({heroIds:[]}))]);state.roster=r;state.taxonomy=t;state.availableArt=new Set(manifest.heroIds||[]);
+ const [r,t,manifest,bandPack]=await Promise.all([fetch('./data/roster.reference.json').then(x=>{if(!x.ok)throw new Error('roster');return x.json();}),fetch('./data/taxonomy.json').then(x=>{if(!x.ok)throw new Error('taxonomía');return x.json();}),fetch('./assets/heroes/manifest.json').then(x=>x.json()).catch(()=>({heroIds:[]})),fetch('./data/rank-bands.v09.json').then(x=>{if(!x.ok)throw new Error('reglas de bandas');return x.json();})]);const bandErrors=validateBandRulepack(bandPack);if(bandErrors.length)throw new Error('Reglas por banda inválidas: '+bandErrors[0]);state.bandPack=bandPack;state.roster=r;state.taxonomy=t;state.availableArt=new Set(manifest.heroIds||[]);
  let saved;try{saved=JSON.parse(localStorage.getItem(STORE_KEY));}catch{}
  const candidate=saved?.model,errors=candidate?validateModel(candidate,r,t,defaultPatch):[];
  state.model=candidate&&!errors.length?candidate:newModel(defaultPatch);
