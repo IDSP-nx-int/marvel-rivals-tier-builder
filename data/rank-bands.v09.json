@@ -1,0 +1,190 @@
+{
+  "kind": "rank-band-rulepack",
+  "schemaVersion": "0.9.0",
+  "version": "0.9.0-hypothesis.1",
+  "patchId": "patch.roster.2026-10-reference",
+  "calibrationStatus": "hypothesis-unvalidated",
+  "description": "Hipótesis de progresión: nunca modifican tiers, nunca representan win rates ni estadísticas por rango.",
+  "traitDefinitions": [
+    {
+      "id": "effective-ttk",
+      "label": "Effective TTK",
+      "meaning": "Rapidez de eliminar durante una oportunidad real, no tiempo teórico de laboratorio",
+      "direction": "positive"
+    },
+    {
+      "id": "conversion-reliability",
+      "label": "Conversion Reliability",
+      "meaning": "Consistencia en transformar oportunidades viables en eliminaciones",
+      "direction": "positive"
+    },
+    {
+      "id": "independent-agency",
+      "label": "Independent Agency",
+      "meaning": "Capacidad de generar impacto sin coordinación significativa de aliados",
+      "direction": "positive"
+    },
+    {
+      "id": "counterplay-sensitivity",
+      "label": "Counterplay Sensitivity",
+      "meaning": "Cuánto se degrada su plan cuando el enemigo lo identifica y responde",
+      "direction": "negative"
+    },
+    {
+      "id": "punish-exposure",
+      "label": "Punish Exposure",
+      "meaning": "Cuánto puede ser castigado cuando falla su compromiso",
+      "direction": "negative"
+    },
+    {
+      "id": "skill-scalability",
+      "label": "Skill Scalability",
+      "meaning": "Transferencia/escalabilidad del valor ante oposición más sofisticada",
+      "direction": "positive"
+    }
+  ],
+  "suggestedTraitsBySubrole": {
+    "subrole.main-tank": [
+      "independent-agency",
+      "punish-exposure"
+    ],
+    "subrole.off-tank": [
+      "counterplay-sensitivity",
+      "independent-agency"
+    ],
+    "subrole.flex-tank": [
+      "skill-scalability",
+      "counterplay-sensitivity"
+    ],
+    "subrole.main-dps": [
+      "conversion-reliability",
+      "independent-agency"
+    ],
+    "subrole.off-dps": [
+      "effective-ttk",
+      "conversion-reliability"
+    ],
+    "subrole.flex-dps": [
+      "independent-agency",
+      "skill-scalability"
+    ],
+    "subrole.main-support": [
+      "independent-agency",
+      "counterplay-sensitivity"
+    ],
+    "subrole.off-support": [
+      "independent-agency",
+      "punish-exposure"
+    ],
+    "subrole.flex-support": [
+      "skill-scalability",
+      "counterplay-sensitivity"
+    ]
+  },
+  "bands": [
+    {
+      "id": "bronze-gold",
+      "label": "Bronce–Oro",
+      "hypothesis": "La consistencia básica, autonomía y supervivencia suelen ofrecer más valor que una coordinación compleja.",
+      "traitsOfInterest": [
+        "independent-agency",
+        "conversion-reliability",
+        "punish-exposure"
+      ],
+      "weights": {
+        "effective-ttk": 0.1,
+        "conversion-reliability": 0.23,
+        "independent-agency": 0.26,
+        "counterplay-sensitivity": 0.08,
+        "punish-exposure": 0.19,
+        "skill-scalability": 0.14
+      }
+    },
+    {
+      "id": "platinum",
+      "label": "Platino",
+      "hypothesis": "Se priorizan fundamentos, adaptación simple y ejecución consistente bajo presión.",
+      "traitsOfInterest": [
+        "conversion-reliability",
+        "skill-scalability",
+        "independent-agency"
+      ],
+      "weights": {
+        "effective-ttk": 0.12,
+        "conversion-reliability": 0.2,
+        "independent-agency": 0.19,
+        "counterplay-sensitivity": 0.14,
+        "punish-exposure": 0.17,
+        "skill-scalability": 0.18
+      }
+    },
+    {
+      "id": "diamond",
+      "label": "Diamante",
+      "hypothesis": "Hipótesis a contrastar: conversión rápida/autónoma puede explotar vigilancia y respuestas incompletas a las rutas.",
+      "traitsOfInterest": [
+        "effective-ttk",
+        "conversion-reliability",
+        "independent-agency"
+      ],
+      "weights": {
+        "effective-ttk": 0.24,
+        "conversion-reliability": 0.26,
+        "independent-agency": 0.21,
+        "counterplay-sensitivity": 0.08,
+        "punish-exposure": 0.13,
+        "skill-scalability": 0.08
+      }
+    },
+    {
+      "id": "grandmaster",
+      "label": "Grandmaster",
+      "hypothesis": "El marcaje, los recursos y la adaptación pueden reducir el éxito de entradas repetitivas; se valoran respuestas y versatilidad.",
+      "traitsOfInterest": [
+        "counterplay-sensitivity",
+        "skill-scalability",
+        "conversion-reliability"
+      ],
+      "weights": {
+        "effective-ttk": 0.18,
+        "conversion-reliability": 0.18,
+        "independent-agency": 0.12,
+        "counterplay-sensitivity": 0.2,
+        "punish-exposure": 0.16,
+        "skill-scalability": 0.16
+      }
+    },
+    {
+      "id": "celestial-plus",
+      "label": "Celestial+",
+      "hypothesis": "Hipótesis a contrastar: neutral y ejecución robusta bajo counterplay competente ganan relevancia; no se supone juego perfecto.",
+      "traitsOfInterest": [
+        "counterplay-sensitivity",
+        "skill-scalability",
+        "conversion-reliability"
+      ],
+      "weights": {
+        "effective-ttk": 0.16,
+        "conversion-reliability": 0.14,
+        "independent-agency": 0.08,
+        "counterplay-sensitivity": 0.24,
+        "punish-exposure": 0.14,
+        "skill-scalability": 0.24
+      }
+    }
+  ],
+  "lenses": [
+    {
+      "id": "climbing",
+      "label": "Subir en esta banda",
+      "meaning": "Hipótesis de eficacia contextual, no predicción de victoria"
+    },
+    {
+      "id": "sustainable",
+      "label": "Progresión sostenible",
+      "meaning": "Considerar también transferibilidad y respuestas del rival"
+    }
+  ],
+  "profiles": {},
+  "profilesPolicy": "Sin perfiles validados por héroe y subrol no se calcula valor de climbing. Los perfiles, al agregarse, deberán tener patchId, status=curated y evidencia verificable."
+}
