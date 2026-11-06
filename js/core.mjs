@@ -4,7 +4,7 @@ export const TIERS=['S','A','B','C','D'];
 export const TIER_RANK={S:5,A:4,B:3,C:2,D:1};
 export const STORE_KEY='mr_tier_builder_v1';
 export function newModel(patchId='patch.roster.2026-10-reference') {
- return {kind:'model',schemaVersion:'0.8.0',id:'model.personal.local',patchId,title:'Mi modelo — Sin evaluar',origin:'personal',revision:0,updatedAt:new Date().toISOString(),eligibilityOverrides:[],assignments:[]};
+ return {kind:'model',schemaVersion:'0.9.0',id:'model.personal.local',patchId,title:'Mi modelo — Sin evaluar',origin:'personal',revision:0,updatedAt:new Date().toISOString(),eligibilityOverrides:[],assignments:[]};
 }
 export function clone(x){return JSON.parse(JSON.stringify(x));}
 export function compatible(hero,subrole){return !!hero&&!!subrole&&Array.isArray(hero.categories)&&hero.categories.includes(subrole.category);}
@@ -20,7 +20,7 @@ export function setTier(model,heroId,subroleId,tier,roster,taxonomy){
  if(eligibility(model,heroId,subroleId)==='ineligible')throw new Error('La asignación está marcada como N/A.');
  let a=assignment(model,heroId,subroleId);
  if(a?.locked)throw new Error('La evaluación está bloqueada: desbloquéala antes.');
- if(a)a.tier=tier;else model.assignments.push({id:`assign.${heroId.slice(5)}.${subroleId.slice(8)}`,heroId,subroleId,tier,locked:false,ratings:{},vulnerabilities:{},dependencies:{},authoredBy:'player'});
+ if(a)a.tier=tier;else model.assignments.push({id:`assign.${heroId.slice(5)}.${subroleId.slice(8)}`,heroId,subroleId,tier,locked:false,ratings:{},mechanicRatings:{},vulnerabilities:{},dependencies:{},authoredBy:'player'});
  touch(model);return assignment(model,heroId,subroleId);
 }
 /**
@@ -154,7 +154,7 @@ export function inferPriorities(model,subroleId,coreCaps){
 export function validateModel(data,roster,taxonomy,expectedPatch){
  const err=[];
  if(!data||typeof data!=='object'||data.kind!=='model'||!Array.isArray(data.assignments)||!Array.isArray(data.eligibilityOverrides))return ['No es un modelo v0.8 reconocible'];
- if(data.schemaVersion!=='0.8.0')err.push('La versión del contrato no es 0.8.0');
+ if(data.schemaVersion!=='0.9.0')err.push('La versión del contrato no es 0.9.0');
  if(expectedPatch&&data.patchId!==expectedPatch)err.push('Parche distinto: se requiere migración deliberada');
  if(!['personal','reference'].includes(data.origin))err.push('Origen inválido');
  const seen=new Set();
@@ -166,6 +166,8 @@ export function validateModel(data,roster,taxonomy,expectedPatch){
   if(typeof a.locked!=='boolean'||(a.locked&&!a.lockedAt)||(!a.locked&&a.lockedAt))err.push('Bloqueo inválido: '+key);
   if(!a.ratings||typeof a.ratings!=='object'||!a.dependencies||!a.vulnerabilities)err.push('Perfil incompleto de estructura: '+key);
   for(const [c,v] of Object.entries(a.ratings||{}))if(!taxonomy.capabilities.some(x=>x.id===c)||!v||!(['rated','not_applicable'].includes(v.state))||(v.state==='rated'&&(!Number.isInteger(v.score)||v.score<1||v.score>5))||(v.state==='not_applicable'&&'score'in v))err.push('Likert inválido: '+key+' '+c);
+  if(!a.mechanicRatings||typeof a.mechanicRatings!=='object'||Array.isArray(a.mechanicRatings))err.push('Perfil mecánico ausente: '+key);
+  else for(const [c,v]of Object.entries(a.mechanicRatings))if(!['effective-ttk','conversion-reliability','independent-agency','counterplay-sensitivity'].includes(c)||!v||!['rated','not_applicable'].includes(v.state)||(v.state==='rated'&&(!Number.isInteger(v.score)||v.score<1||v.score>5))||(v.state==='not_applicable'&&'score' in v))err.push('Likert mecánico inválido: '+key+' '+c);
   for(const k of ['dependencies','vulnerabilities'])for(const [c,v]of Object.entries(a[k]||{}))if(!taxonomy[k].some(x=>x.id===c)||!['present','absent'].includes(v))err.push('Casilla inválida: '+key+' '+c);
  }
  const na=new Set();for(const x of data.eligibilityOverrides){const key=`${x.heroId}|${x.subroleId}`;if(x.status!=='ineligible'&&x.status!=='eligible')err.push('Estado de elegibilidad inválido');if(na.has(key))err.push('N/A duplicado '+key);na.add(key);if(x.status==='ineligible'&&seen.has(key))err.push('N/A y tier simultáneos '+key);}
