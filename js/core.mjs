@@ -23,6 +23,47 @@ export function setTier(model,heroId,subroleId,tier,roster,taxonomy){
  if(a)a.tier=tier;else model.assignments.push({id:`assign.${heroId.slice(5)}.${subroleId.slice(8)}`,heroId,subroleId,tier,locked:false,ratings:{},vulnerabilities:{},dependencies:{},authoredBy:'player'});
  touch(model);return assignment(model,heroId,subroleId);
 }
+/**
+ * Orden intratier: la secuencia de `assignments` es la fuente de verdad.
+ * `model.schemaVersion` sigue siendo 0.8.0: no se agregan campos fuera del contrato.
+ * Los perfiles bloqueados pueden reordenarse dentro del MISMO tier; sus valores y tier no cambian.
+ */
+export function placeWithinTier(model,heroId,subroleId,relativeToHeroId=null,placement='end'){
+ assertWritable(model);
+ const a=assignment(model,heroId,subroleId);
+ if(!a)throw new Error('Primero clasifica al héroe en este subrol');
+ if(!['before','after','start','end'].includes(placement))throw new Error('Posición intratier inválida');
+ let target=null;
+ if(relativeToHeroId!==null){
+  if(!['before','after'].includes(placement))throw new Error('La referencia requiere before o after');
+  target=assignment(model,relativeToHeroId,subroleId);
+  if(!target||target.tier!==a.tier)throw new Error('Solo puedes ordenar dentro del mismo tier y subrol');
+  if(target===a)return false;
+ }else if(placement==='before'||placement==='after')throw new Error('Falta el héroe de referencia');
+ const previous=model.assignments;
+ const updated=previous.filter(x=>x!==a);
+ let index;
+ if(target){index=updated.indexOf(target)+(placement==='after'?1:0);}
+ else if(placement==='start'){
+  index=updated.findIndex(x=>x.tier===a.tier&&x.subroleId===a.subroleId);
+  if(index<0)index=updated.length;
+ }else{
+  let last=-1;
+  for(let i=0;i<updated.length;i++)if(updated[i].tier===a.tier&&updated[i].subroleId===a.subroleId)last=i;
+  index=last<0?updated.length:last+1;
+ }
+ updated.splice(index,0,a);
+ if(updated.every((x,i)=>previous[i]===x))return false;
+ model.assignments=updated;touch(model);return true;
+}
+export function stepWithinTier(model,heroId,subroleId,direction){
+ const a=assignment(model,heroId,subroleId);
+ if(!a)throw new Error('Primero clasifica al héroe');
+ if(direction!==-1&&direction!==1)throw new Error('Dirección inválida');
+ const peers=model.assignments.filter(x=>x.subroleId===subroleId&&x.tier===a.tier);
+ const at=peers.indexOf(a),neighbor=peers[at+direction];
+ return neighbor?placeWithinTier(model,heroId,subroleId,neighbor.heroId,direction<0?'before':'after'):false;
+}
 export function removeAssignment(model,heroId,subroleId){assertWritable(model);const a=assignment(model,heroId,subroleId);if(a?.locked)throw new Error('Desbloquea antes de quitar la clasificación');model.assignments=model.assignments.filter(x=>x!==a);touch(model);}
 export function markNA(model,heroId,subroleId,roster,taxonomy){
  assertWritable(model);
@@ -60,24 +101,56 @@ export function dominanceWarnings(model,candidate,coreCaps=null){
  }
  return out;
 }
+/**
+ * M1.3: inferencia descriptiva de prioridades con dos clases de preferencia ordinal.
+ * 1) Entre tiers (S > A > B > C > D): referencia principal (80%).
+ * 2) Dentro del mismo tier: izquierda precede a derecha, señal secundaria (20%).
+ * Ambas requieren perfiles BLOQUEADOS y los 3 Likert comunes calificados.
+ * Solo se usan posiciones guardadas en el array de asignaciones; no se altera el JSON v0.8.
+ * Si no hay pares entre tiers, se muestran señales intratier sin fabricar pesos.
+ * No confundir posiciones automáticas de inserción con datos externos objetivos;
+ * el ranking visible representa el orden declarado por su autor.
+ */
+export const INTRATIER_PRIORITY_SHARE=0.20;
 export function inferPriorities(model,subroleId,coreCaps){
  const rows=model.assignments.filter(a=>a.subroleId===subroleId&&a.locked&&coreCaps.every(c=>a.ratings[c]?.state==='rated'));
- const counts=coreCaps.map(c=>({capId:c,agree:0,disagree:0,ties:0}));
- let pairs=0;
+ const counts=coreCaps.map(capId=>({capId,agree:0,disagree:0,ties:0,intraAgree:0,intraDisagree:0,intraTies:0}));
+ let pairs=0,withinPairs=0;
  for(let i=0;i<rows.length;i++)for(let j=i+1;j<rows.length;j++){
-  const a=rows[i],b=rows[j];if(a.tier===b.tier)continue;pairs++;
-  const high=TIER_RANK[a.tier]>TIER_RANK[b.tier]?a:b,low=high===a?b:a;
-  for(const item of counts){const dif=high.ratings[item.capId].score-low.ratings[item.capId].score;if(dif>0)item.agree++;else if(dif<0)item.disagree++;else item.ties++;}
+  const a=rows[i],b=rows[j];
+  const within=a.tier===b.tier;
+  if(within)withinPairs++;else pairs++;
+  // En el mismo tier el array es el orden de preferencia: el primero es preferido.
+  const high=within||TIER_RANK[a.tier]>TIER_RANK[b.tier]?a:b;
+  const low=high===a?b:a;
+  for(const item of counts){
+   const dif=high.ratings[item.capId].score-low.ratings[item.capId].score;
+   if(within){if(dif>0)item.intraAgree++;else if(dif<0)item.intraDisagree++;else item.intraTies++;}
+   else{if(dif>0)item.agree++;else if(dif<0)item.disagree++;else item.ties++;}
+  }
  }
- // Transparent descriptive signal, no confidence/inferential weights for small samples.
  const distinctTiers=new Set(rows.map(r=>r.tier)).size;
- const signals=counts.map(c=>({...c,comparable:c.agree+c.disagree,concordance:c.agree+c.disagree?(c.agree-c.disagree)/(c.agree+c.disagree):null}));
+ const signals=counts.map(c=>{
+  const comparable=c.agree+c.disagree;
+  const intraComparable=c.intraAgree+c.intraDisagree;
+  const tierConcordance=comparable?(c.agree-c.disagree)/comparable:null;
+  const intraConcordance=intraComparable?(c.intraAgree-c.intraDisagree)/intraComparable:null;
+  const blendedConcordance=tierConcordance!==null&&intraConcordance!==null
+   ?(1-INTRATIER_PRIORITY_SHARE)*tierConcordance+INTRATIER_PRIORITY_SHARE*intraConcordance
+   :(tierConcordance??intraConcordance);
+  return {...c,comparable,intraComparable,concordance:tierConcordance,intraConcordance,blendedConcordance};
+ });
+ // Se conserva la puerta de salida conservadora para los pesos; las señales sí
+ // se muestran con menos datos, pero sin pretensión de confiabilidad estadística.
  const canWeight=rows.length>=4&&distinctTiers>=3&&signals.every(x=>x.comparable>=2);
- const strengths=canWeight?signals.map(x=>Math.exp(2*x.concordance)):null;
+ const strengths=canWeight?signals.map(x=>Math.exp(2*x.blendedConcordance)):null;
  const denom=strengths?.reduce((a,b)=>a+b,0);
  const weights=canWeight?Object.fromEntries(signals.map((x,i)=>[x.capId,strengths[i]/denom])):null;
- return {observations:rows.length,distinctTiers,pairs,signals,weights,exploratory:true};
+ return {observations:rows.length,distinctTiers,pairs,withinPairs,signals,weights,exploratory:true,
+  tierShare:1-INTRATIER_PRIORITY_SHARE,intratierShare:INTRATIER_PRIORITY_SHARE,
+  interpretation:'El orden dentro del tier es preferencia declarada y solo modula, no sustituye, la jerarquía S–D.'};
 }
+
 export function validateModel(data,roster,taxonomy,expectedPatch){
  const err=[];
  if(!data||typeof data!=='object'||data.kind!=='model'||!Array.isArray(data.assignments)||!Array.isArray(data.eligibilityOverrides))return ['No es un modelo v0.8 reconocible'];
@@ -97,6 +170,24 @@ export function validateModel(data,roster,taxonomy,expectedPatch){
  }
  const na=new Set();for(const x of data.eligibilityOverrides){const key=`${x.heroId}|${x.subroleId}`;if(x.status!=='ineligible'&&x.status!=='eligible')err.push('Estado de elegibilidad inválido');if(na.has(key))err.push('N/A duplicado '+key);na.add(key);if(x.status==='ineligible'&&seen.has(key))err.push('N/A y tier simultáneos '+key);}
  return err;
+}
+/** Validation of a persisted six-slot composition; same rule for save, import and restore. */
+export function validateCompositionDraft(c,model,roster,taxonomy){
+ const errors=[];
+ if(!c||c.kind!=='composition-draft'||c.schemaVersion!=='1.0.0')return ['Formato de composición incompatible'];
+ if(c.modelId!==model.id||c.patchId!==model.patchId)errors.push('Modelo o parche incompatible');
+ if(!Array.isArray(c.slots)||c.slots.length!==6)return [...errors,'Se requieren exactamente seis plazas'];
+ const positions=new Set(),heroes=new Set();
+ for(const slot of c.slots){
+  if(!slot||!Number.isInteger(slot.slot)||slot.slot<1||slot.slot>6||positions.has(slot.slot))errors.push('Número de plaza inválido o repetido');
+  positions.add(slot?.slot);
+  const hero=roster.heroes.find(h=>h.id===slot?.heroId);
+  const subrole=taxonomy.subroles.find(s=>s.id===slot?.subroleId);
+  if(!hero||!compatible(hero,subrole))errors.push('Héroe o subrol no válido');
+  if(heroes.has(slot?.heroId))errors.push('Un héroe no puede ocupar dos plazas');
+  heroes.add(slot?.heroId);
+ }
+ return [...new Set(errors)];
 }
 export function newComposition(model){return {kind:'composition-draft',schemaVersion:'1.0.0',id:'comp.local.'+Date.now(),modelId:model.id,modelRevision:model.revision,patchId:model.patchId,title:'Nueva composición',slots:Array.from({length:6},(_,i)=>({slot:i+1,heroId:null,subroleId:null})),winConditionPlans:[],resourceClaims:[],context:{side:'unspecified',phase:'unspecified'}};}
 export const FUNCTIONAL_JOBS={

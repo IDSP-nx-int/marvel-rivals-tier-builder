@@ -25,7 +25,38 @@
   <div id="status" class="status" role="status" aria-live="polite"></div>
   <section id="view-overview" class="view" hidden><div class="section-title"><div><h2>Vista general</h2><p>Estado de tus evaluaciones y acceso al framework.</p></div></div><div id="overviewBody"></div></section>
   <section id="view-rankings" class="view">
-    <div class="section-title"><div><h2>Rankings por subrol</h2><p>Compara Main, Off y Flex simultáneamente. Cada héroe puede tener un tier distinto en cada subrol.</p></div><div class="category-tabs" role="tablist" aria-label="Categoría oficial"><button data-category="vanguard" class="category-tab">Vanguard</button><button data-category="duelist" class="category-tab active">Duelist</button><button data-category="strategist" class="category-tab">Strategist</button></div></div>
+    <div class="section-title"><div><h2>Rankings por subrol</h2><p>Compara Main, Off y Flex simultáneamente. Dentro de cada tier, el orden de izquierda a derecha representa tu preferencia. Arrastra retratos para reordenarlos.</p></div><div class="category-tabs" role="tablist" aria-label="Categoría oficial"><button data-category="vanguard" class="category-tab">Vanguard</button><button data-category="duelist" class="category-tab active">Duelist</button><button data-category="strategist" class="category-tab">Strategist</button></div></div>
+    <div class="band-strip" aria-label="Contexto por banda, sin modificar tiers">
+      <div class="band-strip-title"><strong>Contexto para subir de rango</strong><span class="badge none">v0.9 · Hipótesis sin calibrar</span></div>
+      <label>Banda <select id="bandSelect" class="band-select" aria-label="Banda competitiva"></select></label>
+      <label>Objetivo <select id="bandLens" class="band-select" aria-label="Objetivo de interpretación"></select></label>
+      <div class="band-strip-info"><span id="bandHypothesis">Las bandas describen hipótesis, no rankings alternativos.</span><small>Un único tier list idealizado; no modifica tus posiciones.</small></div>
+    </div>
+    <section class="tier-guide" aria-labelledby="tier-guide-title">
+      <div class="tier-guide-header">
+        <strong id="tier-guide-title">Guía de tiers</strong>
+        <span>Valor relativo por subrol y parche, según tu criterio.</span>
+      </div>
+      <div class="tier-guide-grid" aria-label="Definiciones breves de S a D">
+        <div class="tier-guide-item"><span class="tier-guide-grade S">S</span><span>Dominante / referente</span></div>
+        <div class="tier-guide-item"><span class="tier-guide-grade A">A</span><span>Fuerte / consistente</span></div>
+        <div class="tier-guide-item"><span class="tier-guide-grade B">B</span><span>Viable / contextual</span></div>
+        <div class="tier-guide-item"><span class="tier-guide-grade C">C</span><span>Nicho / ineficiente</span></div>
+        <div class="tier-guide-item"><span class="tier-guide-grade D">D</span><span>Inferior / poco competitivo</span></div>
+      </div>
+      <details class="tier-guide-details">
+        <summary>Ver definiciones completas de S–D y N/A</summary>
+        <div class="tier-guide-expanded">
+          <p><strong>S — Dominante / referente:</strong> entre las mejores alternativas para cumplir ese subrol en el meta evaluado; sobresale por impacto, consistencia o eficiencia.</p>
+          <p><strong>A — Fuerte:</strong> alternativa sólida y competitiva, con buen desempeño en contextos habituales, aunque no define la referencia superior del subrol.</p>
+          <p><strong>B — Viable / contextual:</strong> puede desempeñar correctamente el subrol, especialmente cuando la composición, el mapa o el enfrentamiento favorecen sus herramientas.</p>
+          <p><strong>C — Nicho / ineficiente:</strong> tiene aplicaciones específicas, pero suele requerir mayores concesiones, recursos o condiciones que otras alternativas del mismo subrol.</p>
+          <p><strong>D — Inferior / poco competitivo:</strong> puede cumplir la función técnicamente, pero suele ofrecer menor valor relativo que otras opciones para el mismo trabajo.</p>
+          <p><strong>N/A — No aplicable:</strong> el héroe no se considera candidato para ese subrol; no equivale a D ni a una evaluación pendiente.</p>
+          <p class="tier-guide-context">Los tiers son decisiones del autor, no una puntuación calculada de los Likert. Un héroe puede estar en tiers diferentes en Main, Off y Flex. El orden de izquierda a derecha dentro de cada tier indica preferencia adicional: entre perfiles bloqueados y evaluados, también aporta evidencia secundaria al Priority Engine (20 % frente a 80 % de diferencias entre tiers).</p>
+        </div>
+      </details>
+    </section>
     <div class="ranking-layout"><div id="boards" class="boards" aria-label="Tres rankings por subrol"></div><aside class="pool panel"><h3>Catálogo de héroes</h3><p>Arrastra al tier correspondiente o selecciona un héroe y pulsa una fila.</p><input id="heroSearch" class="input" type="search" placeholder="Buscar héroe…" aria-label="Buscar héroe"/><div id="heroPool" class="hero-pool"></div><div id="poolInfo" class="pool-info"></div></aside></div>
     <div id="editor" class="editor panel"><div class="editor-empty">Selecciona un héroe o arrástralo a cualquiera de los tres subroles para abrir la evaluación rápida.</div></div>
   </section>

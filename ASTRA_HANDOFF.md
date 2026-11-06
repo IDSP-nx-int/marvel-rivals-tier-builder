@@ -1,72 +1,46 @@
-# Handoff técnico a Astra — evitar reconstrucción
+# INSTRUCCIONES EXACTAS PARA ASTRA — M1.4
 
-**Objetivo del encargo:** publicar y pulir el Builder web ya construido; no volver a diseñar metodología ni reescribir desde cero.
+**Objetivo:** Montar el ZIP acumulativo en GitHub sin rediseñar, sin inventar perfiles mecánicos, sin modificar datos personales.
 
-## Estado confirmado
+**Repo único:** `https://github.com/IDSP-nx-int/marvel-rivals-tier-builder`.
+**Base esperada**: `main` SHA `a9a6f3c3b6c4cfef0bf76c482ebfb2a4010a9ade`.
+**Target de publicación:** GitHub Pages `main` / `(root)`; URL `https://idsp-nx-int.github.io/marvel-rivals-tier-builder/`.
 
-- Sitio **estático ES Modules + CSS + HTML**, sin compilación, en `index.html`, `css/style.css`, `js/app.mjs`, `js/core.mjs`.
-- **Cinco vistas** funcionalmente conectadas, con limitaciones explicitadas para motores avanzados.
-- Vista 01 mantiene **TRES columnas visibles simultáneamente**, `Main / Off / Flex`, con `S,A,B,C,D` como FILAS de cada columna, nunca subroles mezclados como tiers. Catálogo lateral + editor contextual inferior.
-- Base real de **54 héroes con Deadpool multirrol**, sin tiers ni propiedades competitivas inventadas. Los retratos son iniciales hasta disponer de archivos autorizados.
-- Modelos y bloqueos independientes por `heroId × subroleId`, sin imposición 2-2-2.
-- `localStorage`, exportación e importación; protección contra duplicados y datos básicos incompatibles.
-- Pruebas: `npm test` (20 tests). Legado: 12 tests Python y JSON Schema originales v0.8. Captura de Chromium en `docs/app_preview.png`.
+## Operación obligatoria, sin decisiones de producto
 
-## Prioridad 0 — Repositorio / despliegue
+1. Confirmar SHA en repositorio: `git rev-parse HEAD`. **Si ya no es `a9a6f3c3b6c4cfef0bf76c482ebfb2a4010a9ade`, detenerse y reportar que hay cambios nuevos; no pisarlos.**
+2. Trabajar en rama: `git switch -c release/m1-4-rank-band`
+3. Extraer el ZIP `Marvel_Rivals_M1_4_PATCH_SOLO_CAMBIOS.zip` **en la raíz del repo, sobrescribiendo solo archivos presentes en el ZIP, sin borrar otros archivos**. `index.html` debe quedar en la raíz. No volver a aplicar M1.1, M1.2, M1.3; M1.4 ya los incluye.
+4. Ejecutar en la raíz: `npm test` y confirmar **49 tests, 0 fails**. Opcional: `node --check js/app.mjs && node --check js/core.mjs && node --check js/rank-band.mjs`.
+5. Verificar el diff. Solo pueden existir los cambios previstos en `MANIFEST_M1_4.json` (archivos versionados nuevos o modificados); **no borrar ni sustituir** `data/roster.reference.json`, `data/taxonomy.json`, `legacy/`, `assets/heroes/`, los modelos locales o las cinco vistas.
+6. Commit y PR: `git add -A && git commit -m "feat: intra-tier ordering, tier guide and rank-band v0.9 scaffold" && git push -u origin release/m1-4-rank-band`. Crear PR hacia `main`, aprobar y fusionar tras ver tests verdes. Si Astra tiene autorización explícita para integrar directo a `main`, puede hacerlo siguiendo los controles anteriores; no forzar push.
+7. Esperar a que GitHub Pages termine el deploy y comprobar manualmente URL HTTPS. Probar en incógnito con modelo ficticio de prueba; no sobreescribir datos de un usuario real.
+8. Mostrar al responsable del proyecto el commit final y la URL publicada. No afirmar que el M1.4 está montado hasta comprobarlo.
 
-1. Verifica que `index.html` y `.nojekyll` estén en la raíz, con rutas relativas. Si el repositorio existe, integra **sin borrar contenido del usuario**.
-2. Publica la rama `main` con GitHub Pages `/(root)`; verifica HTTP 200 de `data/roster.reference.json` y `data/taxonomy.json` y que las cinco vistas funcionen en el URL final.
-3. Ejecuta `npm test`; si cambias lógica, añade tests. Si GitHub Actions falla, conserva fixtures/contratos originales sin mutarlos.
-4. No publiques ningún modelo personal en el repositorio público por accidente.
+## Checklist visual y funcional E2E obligatorio
 
-## Prioridad 1 — Completar la interfaz aprobada
+- Cambiar Vanguard/Duelist/Strategist mantiene 3 tableros Main/Off/Flex simultáneos.
+- Guía S/A/B/C/D visible justo arriba; detalle expandible, N/A correcto.
+- Colocar dos héroes en tier A Off DPS y cambiar su orden por drag/drop y por botones. Si están bloqueados y tienen 3 Likert, el conteo de comparaciones intratier cambia sin mover su tier; otras columnas no se alteran.
+- Clasificar héroe sin Likert; guardarlo; bloquearlo; recargar; sigue allí.
+- Evaluación rápida contiene exactamente 3 Likert comunes + 2 **cualidades curadas de solo lectura** + vulnerabilidades/dependencias sugeridas; el resto expandible.
+- Cambiar banda (5 opciones) y objetivo (climbing/progresión) no reordena ni modifica tiers. En roster real sin perfiles curados muestra "Pendiente de curación" y **no** inventa desempeño.
+- Exportar JSON de prueba, reimportar y confirmar orden, locks, ratings y N/A. Para pruebas de importación maliciosa/errónea, verificar rechazo de dos héroes iguales en una composición y de slots repetidos.
+- Vista 00, 02, 03 y 04 siguen navegables. Composición y matchup deben conservar aviso Alpha, sin tasas de victoria.
+- Abrir en móvil: columnas en carrusel/scroll horizontal, sin superposición del sidebar sobre guía o menú.
+- Consola de navegador sin excepciones; sin fallos de recursos 404 en `js/rank-band.mjs`, `data/rank-bands.v09.json` ni enlaces a V2.
 
-1. Comparar con `docs/mockup_tres_subroles.png` y el documento maestro. Conservar distribución y proporciones: sidebar, tres tableros simultáneos, catálogo derecho, editor rápido inferior. **Nunca reemplazarlo por un filtro que muestre un solo subrol.**
-2. Mejorar legibilidad, respuesta a tamaños estrechos y navegación por teclado. No introducir una pantalla obligatoria de 17 Likert.
-3. Incorporar retratos `Lord_Icon` **solo si se autoriza y se proporcionan archivos/licencias compatibles**; usar `assets/heroes/<slug>.webp` y registrar ID en `manifest.json`. No hotlink ni scraping ciego.
-4. Añadir indicadores `Pendiente`, `N/A`, `Tier bloqueado / Perfil incompleto` para cada Hero × Subrole. El bloqueo debe dejar la evaluación incompleta posible.
+## Guardrails / no hacer
 
-## Prioridad 2 — Integridad y persistencia
+- NO reconstruir usando React ni sustituir el diseño oscuro de tres tableros.
+- NO modificar 17 capacidades, 9 subroles ni las tres principales por subrol.
+- NO llenar a mano los 6 atributos con datos inventados o extrapolados de tiers.
+- NO generar tiers automáticos por banda ni win probabilities.
+- NO cambiar clave `mr_tier_builder_v1` de localStorage, `model.schemaVersion` 0.8 ni formato de respaldo.
+- NO subir a GitHub respaldos personales. Exportar JSON de seguridad antes de probar importaciones en navegador real.
+- NO añadir retratos Lord sin permiso y procedencia revisada.
+- NO reintroducir fixture legado bloqueado por la revisión anterior.
 
-1. Añadir un validador exhaustivo en cliente con JSON Schema (o validación local equivalente) para modelos importados y respaldos; no incorporar servidores externos.
-2. Completar **migraciones versionadas** antes de cambiar `patchId` o `schemaVersion`. El roster en `data/roster.reference.json` tiene `categories[]`, incluido Deadpool; el catálogo original v0.8 tiene una sola `category`. Diseñar esquema nuevo compatible SIN modificar retrospectivamente v0.8.
-3. Permitir nombrar/revisar modelos personales, crear fork del modelo de referencia, exportar el modelo por separado y el respaldo integral. Mantener privacidad local y advertencias antes de reemplazar datos.
-4. Formalizar las composiciones: hoy el editor guarda borradores `kind=composition-draft` (6 héroes sin necesidad de rankings); `toV08Composition` exporta únicamente cuando existen seis asignaciones válidas. Conservar este comportamiento.
+## Entrega que Astra debe devolver
 
-## Prioridad 3 — Motores avanzados, únicamente con evidencia suficiente
-
-1. Consistency Engine: robustecer advertencias para considerar condiciones no capturadas; no usarlas como prueba de verdad del meta. Mantener override consciente del usuario.
-2. Priority Inference: probar robustez Leave-One-Out, manejo de correlaciones, sensibilidad y pesos descriptivos; evitar umbral estadístico 20 imposible por subrol. La función actual es exploratoria.
-3. Composition Engine: implementar reglas deterministas trazables de sinergia, cobertura, economía de recursos y cadenas de win condition; vincular recursos a capacidades de fuente/ventana/objetivo **reales y revisadas por parche**. La versión actual solo muestra candidatos y dependencias compartidas, no confirmación de sinergias.
-4. Matchup Engine: evaluar ambos sentidos, contramedidas compatibles, alcance, cooldowns, rutas, ventanas y contexto de mapa. **No estimar win probabilities** sin un modelo externo validado.
-5. Añadir tests de regresión y procedencia para conclusiones derivadas, y no invalidar perfiles de jugador cuando cambien reglas del motor.
-
-## Restricciones no negociables
-
-- El **tier es humano, nunca suma de Likert**.
-- `rating = sin evaluar` distinto de `not_applicable` distinto de `rated:1`.
-- Casilla no seleccionada ≠ confirmación de ausencia; cuando explícitamente se evalúa usar `present/absent`.
-- Un héroe puede tener Tier S en Main y C en Off sin conflicto de identidad.
-- Tres columnas Main/Off/Flex **siempre visibles** dentro de una categoría, con scroll horizontal en móvil si es necesario.
-- Un equipo no se descarta por distribución diferente de 2/2/2.
-- Prioridad de inferencia y coherencia **por subrol y parche**; no transferir pesos automáticamente entre roles.
-- Distinguir `declarado`, `derivado`, `curado`, `desconocido`; no inventar metadatos para completar huecos.
-- Nada de cuentas, servicios de pago o backend en MVP; GitHub Pages y JSON import/export bastan.
-- Mantener fidelidad al documento maestro y no cambiar las decisiones sin consultarlas.
-
-## Criterios de aceptación inmediatos
-
-- [ ] 3 subroles en paralelo, 5 tiers por tablero, drag & drop entre filas, teclado alternativo.
-- [ ] Mismo héroe en dos subroles con tiers y perfiles independientes.
-- [ ] Likert sugeridos = 3 por subrol; extra opcionales; sin autopuntuaciones.
-- [ ] Bloquear perfil incompleto; desbloquear individual; otro subrol no se altera.
-- [ ] N/A explícito no se confunde con «pendiente».
-- [ ] Exportar → importar conserva contenido y estados; parche incompatible se rechaza con explicación.
-- [ ] Modelo referencia read-only con fork editable.
-- [ ] 6 héroes, cualquier distribución; conflictos claros o información insuficiente en vez de scoring ficticio.
-- [ ] GitHub Pages sin rutas rotas en `/marvel-rivals-tier-builder/`.
-- [ ] `npm test` y validadores legacy pasan.
-
-## Resultado esperado de Astra
-
-Entregar **código modificado mediante commits/PR en el repositorio**, URL funcional de GitHub Pages, resumen de diffs, pruebas ejecutadas, límites pendientes y decisiones que requieran aprobación. No solicitar rediseño inicial: este paquete ya incluye la base.
+SHA del commit de fusión, enlace a CI verde, URL HTTPS verificada, capturas escritorio y móvil, tabla de checklist aprobada y cualquier incidencia exacta. No necesita proponer más diseño.

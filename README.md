@@ -1,6 +1,6 @@
 # Marvel Rivals — Composition-Aware Tier Builder
 
-**Estado: alpha funcional, no producción.** Proyecto de comunidad independiente. Modelo de conocimiento: Hero × Subrole × Model × Patch. El usuario define los tiers; la aplicación no inventa rankings, probabilidades de victoria ni habilidades no evaluadas.
+**Estado: alpha funcional, no producción. M1.4 preparado para despliegue; la publicación de este parche requiere un commit.** Proyecto de comunidad independiente. Modelo de conocimiento: Hero × Subrole × Model × Patch. El usuario define los tiers; la aplicación no inventa rankings, probabilidades de victoria ni habilidades no evaluadas.
 
 ## Inicio rápido
 
@@ -9,6 +9,15 @@
 3. En GitHub: **Settings → Pages → Deploy from a branch → main → /(root) → Save**. El archivo `.nojekyll` evita el procesamiento de Jekyll.
 4. Corre `npm test`. Solo requiere Node.js >=20; la aplicación web no necesita npm ni servidor.
 5. Exporta el respaldo JSON antes de limpiar el almacenamiento del navegador.
+
+## M1.4: cambios nuevos (pendientes de publicar al integrar el ZIP)
+
+- M1.1: orden intratier por arrastre y botones, sin modificar tiers/locks.
+- M1.2: leyenda S/A/B/C/D + N/A arriba de los tres tableros.
+- M1.3: preferencias intratier como señal exploratoria secundaria (80/20 heurístico).
+- M1.4: capa contextual por bandas calibrable `data/rank-bands.v09.json`, dos cualidades curadas por subrol visibles sin pedir captura adicional. No existen aún perfiles de rendimiento curados del roster: **no se inventa valor de climbing**.
+- M1.4: validación común de composiciones en guardado/importación/restauración; controles móviles.
+- 49 pruebas JavaScript automatizadas y prueba de humo sin red en Chromium (la web publicada requiere comprobación adicional).
 
 ## Qué está implementado
 
@@ -36,7 +45,7 @@
 - `data/roster.reference.json`: **54 héroes** de referencia al 23-oct-2026. Deadpool tiene participación multirrol y aparece en las tres categorías. Ningún tier ni kit se atribuye automáticamente. Revalidar con el juego al cambiar el parche.
 - `data/taxonomy.json`: 9 subroles, 17 capacidades, tres Likert sugeridos por subrol y conjuntos de casillas de la entrega v0.8.
 - `legacy/v0.8/`: **contrato original sin reemplazar silenciosamente**. Incluye esquemas, fixtures y 12 pruebas Python. Las reglas de composición aún requieren evolución de contrato.
-- `docs/Documento_Maestro_v1.0.pdf`: línea base de decisiones y trazabilidad.
+- `docs/Documento_Maestro_v2.0.pdf`: línea base de decisiones y trazabilidad.
 - `docs/mockup_tres_subroles.png`: referencia estética, no una fuente de rankings reales.
 
 ### Distinción composición: borrador vs contrato v0.8
@@ -56,7 +65,7 @@ python legacy/v0.8/tools/validate.py
 python -m unittest discover -s legacy/v0.8/tests -v
 ```
 
-- 20 pruebas JavaScript del dominio v1.0 y 12 pruebas Python del contrato ficticio v0.8.
+- **49 pruebas JavaScript** de la versión M1.4. Las 12 pruebas Python originales v0.8 se documentaron con el paquete completo, pero la publicación actual omite un fixture, por lo que no se afirman pruebas legacy CI superadas en el repositorio.
 - Prueba de humo Chromium: tres tableros renderizados, 28 héroes visibles en Duelist (incluyendo Deadpool), asignación Hela→Off DPS→A, puntuación, bloqueo, cero excepciones de ejecución.
 - Estas pruebas NO validan el meta real, ni los matchups reales, ni los derechos sobre arte externo.
 

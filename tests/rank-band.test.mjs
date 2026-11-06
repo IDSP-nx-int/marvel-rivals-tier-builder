@@ -1,0 +1,18 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {validateBandRulepack,curatedProfile,evaluateBand} from '../js/rank-band.mjs';
+const p=JSON.parse(readFileSync(new URL('../data/rank-bands.v09.json',import.meta.url)));
+const patch=p.patchId;
+const id='hero.synthetic', role='subrole.off-dps';
+const caseProfile={status:'curated',patchId:patch,evidence:['Ejemplo sintético para prueba, sin atribución de meta real'],qualities:{'effective-ttk':5,'conversion-reliability':5,'independent-agency':5,'counterplay-sensitivity':5,'punish-exposure':5,'skill-scalability':2}};
+test('rulepack íntegro y pesos normalizados',()=>assert.deepEqual(validateBandRulepack(p),[]));
+test('hay cinco bandas y 6 cualidades',()=>{assert.equal(p.bands.length,5);assert.equal(p.traitDefinitions.length,6)});
+test('cero perfiles curados en el producto, ningún juicio atribuido a héroes reales',()=>{assert.deepEqual(p.profiles,{});assert.equal(evaluateBand(p,'hero.hela',role,patch,'diamond').state,'unknown')});
+test('cada subrol muestra dos cualidades, sin formularios adicionales',()=>{assert.equal(Object.keys(p.suggestedTraitsBySubrole).length,9);for(const v of Object.values(p.suggestedTraitsBySubrole))assert.equal(v.length,2)});
+test('un perfil sin evidencia no se usa',()=>{const q=structuredClone(p);q.profiles[`${id}|${role}`]={...caseProfile,evidence:[]};assert.equal(curatedProfile(q,id,role,patch),null)});
+test('un perfil de otro parche se ignora',()=>{const q=structuredClone(p);q.profiles[`${id}|${role}`]=caseProfile;assert.equal(evaluateBand(q,id,role,'patch.new','diamond').state,'unknown')});
+test('no aceptar métricas inválidas o parciales',()=>{const q=structuredClone(p);q.profiles[`${id}|${role}`]={...caseProfile,qualities:{...caseProfile.qualities,'effective-ttk':6}};assert.equal(evaluateBand(q,id,role,patch,'diamond').state,'unknown')});
+test('la banda cambia el análisis con el mismo perfil sin modificar el perfil',()=>{const q=structuredClone(p);q.profiles[`${id}|${role}`]=caseProfile;const before=JSON.stringify(q.profiles);const d=evaluateBand(q,id,role,patch,'diamond');const c=evaluateBand(q,id,role,patch,'celestial-plus');assert.equal(d.state,'exploratory');assert.equal(c.state,'exploratory');assert.notEqual(d.score,c.score);assert.equal(JSON.stringify(q.profiles),before)});
+test('progresión sostenible revela transferencia, no modifica valoración base',()=>{const q=structuredClone(p);q.profiles[`${id}|${role}`]=caseProfile;const a=evaluateBand(q,id,role,patch,'diamond','climbing');const b=evaluateBand(q,id,role,patch,'diamond','sustainable');assert.equal(a.score,b.score);assert.equal(a.transferability,null);assert.ok(b.transferability)});
+test('banda no reconocida nunca permite inferencia',()=>assert.equal(evaluateBand(p,id,role,patch,'fabricated').state,'unknown'));

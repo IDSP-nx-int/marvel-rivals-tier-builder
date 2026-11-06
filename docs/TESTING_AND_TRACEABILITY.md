@@ -1,3 +1,13 @@
+## M1.4 — Control de aceptación adicional
+
+- Fuente publicada observada mediante GitHub API: `main` SHA `a9a6f3c3b6c4cfef0bf76c482ebfb2a4010a9ade` al 2026-11-06. La URL HTTPS externa no pudo abrirse por restricciones de conectividad; no atribuir tests en vivo.
+- `npm test`: **49/49** pruebas JavaScript de módulos y validación.
+- Smoke de DOM en Chromium (harness offline que integra módulos y simula respuestas HTTP): 3 tableros, 15 filas S–D, 5 bandas, asignar Black Cat→Off DPS→A, puntuar, bloquear, cambiar de banda, verificar que dos cualidades figuren pendientes. Cero errores JS en el harness. No equivale a probar el sitio HTTPS real.
+- M1.1/M1.3: orden manual, lock y pesos con evidencia intratier, serialización JSON (unitarias).
+- M1.4: una única evaluación idealizada; reglas por banda solo consulta; datos desconocidos nunca se convierten a valores.
+- M1.4: importaciones deben rechazar slots repetidos, héroes duplicados, subrol inválido, parche distinto.
+- Pendiente post-despliegue: visita GitHub Pages, probar flujo completo y visual de móvil; no crear tiers reales ficticios en GitHub público.
+
 # Estado y trazabilidad técnica — corte 2026-10-23
 
 ## Validado por tests de implementación
@@ -29,3 +39,10 @@
 ## Documentos de decisión
 
 `docs/Documento_Maestro_v1.0.pdf`, `ASTRA_HANDOFF.md`, `legacy/v0.8/README.md`.
+
+## M1.3 — actualización de evidencias (2026-10-24)
+
+- `npm test`: **32/32 pruebas de lógica** en Node.js (26 previas + 6 de orden intratier en inferencia).
+- Se comprobaron el cambio de preferencia al reordenar, la exclusión de perfiles incompletos y desbloqueados, independencia de subroles, mezcla 80/20 y conservación tras serializar.
+- **No afirmar smoke test de navegador:** Chromium del entorno impidió navegar al servidor local con `net::ERR_BLOCKED_BY_ADMINISTRATOR`. Comprobar UI manualmente en GitHub Pages después del despliegue.
+- Los pesos siguen siendo **descriptivos/exploratorios**, no validados con observaciones competitivas independientes.
