@@ -1,0 +1,32 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {newModel,setTier,updateRating} from '../js/core.mjs';
+import {setMechanicRating} from '../js/mechanics.mjs';
+import {validateBandV16Rulepack,analyzeBandV16} from '../js/rank-band-v16.mjs';
+const load=p=>JSON.parse(readFileSync(new URL('../data/'+p,import.meta.url),'utf8'));
+const rules=load('rank-bands.v10.json'),roster=load('roster.reference.json'),tax=load('taxonomy.json');
+const hero='hero.black-widow',sub='subrole.off-dps';
+const sample=()=>{const m=newModel();setTier(m,hero,sub,'B',roster,tax);return m;};
+const score=(m,ttk=5,rel=5,agency=4,counter=5)=>{for(const [k,v] of Object.entries({'effective-ttk':ttk,'conversion-reliability':rel,'independent-agency':agency,'counterplay-sensitivity':counter}))setMechanicRating(m,hero,sub,k,'rated',v);return m;};
+test('v1.0 rulepack validates with five bands',()=>{assert.deepEqual(validateBandV16Rulepack(rules),[]);assert.equal(rules.bands.length,5)});
+test('no mechanics means no opinion by band',()=>{const x=analyzeBandV16(sample(),hero,sub,rules,'diamond');assert.equal(x.state,'unrated');assert.equal(x.opportunities.length,0)});
+test('unknowns are not substituted with invented midpoints',()=>{const m=sample();setMechanicRating(m,hero,sub,'effective-ttk','rated',5);const a=analyzeBandV16(m,hero,sub,rules,'diamond');assert.equal(a.state,'partial');assert.equal(a.missing.length,3);assert.equal(a.opportunities.length,0)});
+test('effective conversion can trigger Diamond conditional without fabricating flank',()=>{const m=score(sample());const x=analyzeBandV16(m,hero,sub,rules,'diamond');assert.equal(x.state,'evaluated');assert.ok(x.opportunities.some(s=>s.includes('picks rápidos')));assert.ok(x.conditions.some(s=>s.includes('No se presume flank')));assert.ok(!x.opportunities.some(s=>s.includes('off-angle/flank')))});
+test('lateral scoring creates a flank signal but requires access evidence',()=>{const m=score(sample());updateRating(m,hero,sub,'cap.off-angle-pressure','rated',5,tax);const x=analyzeBandV16(m,hero,sub,rules,'diamond');assert.ok(x.opportunities.some(s=>s.includes('off-angle/flank')))});
+test('counterplay sensitivity can be beneficial in Diamond and costly Celestial+ without altering tier',()=>{const m=score(sample());const before=JSON.stringify(m);const d=analyzeBandV16(m,hero,sub,rules,'diamond');const c=analyzeBandV16(m,hero,sub,rules,'celestial-plus');assert.ok(d.opportunities.length>0);assert.ok(c.limitations.some(s=>s.includes('Sensibilidad alta')));assert.equal(c.baselineTier,'B');assert.equal(d.baselineTier,'B');assert.equal(JSON.stringify(m),before)});
+test('high sensitivity is a vulnerability, 1/5 behaves as robust',()=>{const m=score(sample(),5,5,4,1);const c=analyzeBandV16(m,hero,sub,rules,'celestial-plus');assert.ok(c.opportunities.some(s=>s.includes('baja sensibilidad')));assert.ok(!c.limitations.some(s=>s.includes('Sensibilidad alta')))});
+test('weak conversion does not generate fast pick inference',()=>{const x=analyzeBandV16(score(sample(),2,2,5,5),hero,sub,rules,'diamond');assert.ok(!x.opportunities.some(s=>s.includes('picks rápidos')))});
+test('lens sustainable discusses transferability but not skill as measured',()=>{const m=score(sample());const a=analyzeBandV16(m,hero,sub,rules,'diamond','sustainable');assert.match(a.transferability,/Condicionada/);assert.ok(!('winProbability'in a));assert.ok(!('tierByBand'in a))});
+test('invalid bands and rule config fail closed',()=>{assert.equal(analyzeBandV16(sample(),hero,sub,rules,'unreal').state,'invalid');const q=structuredClone(rules);q.bands[0].environment.flankAwareness=9;assert.ok(validateBandV16Rulepack(q).length)});
+test('higher punish reliability exposes counter-sensitive commitment risk',()=>{
+ const m=score(sample(),5,5,4,5);
+ const r=analyzeBandV16(m,hero,sub,rules,'celestial-plus');
+ assert.ok(r.limitations.some(x=>x.includes('castigos más fiables')));
+});
+test('flank awareness checks strong lateral access instead of promising free picks',()=>{
+ const m=score(sample(),5,5,4,5);
+ updateRating(m,hero,sub,'cap.off-angle-pressure','rated',5,tax);
+ const r=analyzeBandV16(m,hero,sub,rules,'celestial-plus');
+ assert.ok(r.limitations.some(x=>x.includes('vigilancia de flancos')));
+});
