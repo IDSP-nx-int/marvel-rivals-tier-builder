@@ -1,0 +1,476 @@
+{
+  "version": "M1.7.1-partial",
+  "createdUtc": "2026-11-06T21:05:56.699643+00:00",
+  "expected": 54,
+  "found": 51,
+  "animated": 51,
+  "staticLord": 0,
+  "reused": 51,
+  "missing": [
+    "hero.gorr-the-god-butcher",
+    "hero.jubilee",
+    "hero.the-hood"
+  ],
+  "entries": [
+    {
+      "heroId": "hero.adam-warlock",
+      "filename": "adam-warlock.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Adam_Warlock_Animated.webp",
+      "sha256": "2fb76ca0df6ae80d81fdc4d911dbe4ebfb708fe914181997bdcf4df51b71a101",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.angela",
+      "filename": "angela.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Angela_Animated.webp",
+      "sha256": "49f771d3a548fa8fed497adf8b8060619e4afe35a70c45bfdc7674ef4b51c812",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.black-cat",
+      "filename": "black-cat.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Black_Cat_Animated.webp",
+      "sha256": "94ce5351461e6e0c732a93f0220cc569a0a58391235c116577e6cd11f52d1f93",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.black-panther",
+      "filename": "black-panther.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Black_Panther_Animated.webp",
+      "sha256": "3052050a3e191c6124830a5618730a7927fa737410f9c846dc34c3bf11099ce2",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.black-widow",
+      "filename": "black-widow.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Black_Widow_Animated.webp",
+      "sha256": "aaf32a53814e208a6fd47a3976d814e4954f4ef0ee31dddd281e23e185e34380",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.blade",
+      "filename": "blade.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Blade_Animated.webp",
+      "sha256": "c46e8d542c2513e48afb8394028efe2f119dbfb22f776e822f04af13cfb229fa",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.captain-america",
+      "filename": "captain-america.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Captain_America_Animated.webp",
+      "sha256": "8a96e77e5ca7a619dbd5c0e626d9259c21803ab093253237b6870542b9066400",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.cloak-dagger",
+      "filename": "cloak-dagger.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Cloak_Dagger_Animated.webp",
+      "sha256": "a62451c8d4bc25e819ef1960de791e1106df962b78bd44bb311f50636a6bcb4b",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.cyclops",
+      "filename": "cyclops.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Cyclops_Animated.webp",
+      "sha256": "8c27388e031ea28c6fec8a683684606e2ea70c34a9c7ae2db1c7263b718ddeb9",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.daredevil",
+      "filename": "daredevil.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Daredevil_Animated.webp",
+      "sha256": "2f8ea1b12800d63d0f0184a50246e251cb1e7e239681fc50b7284d3d9f25a485",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.deadpool",
+      "filename": "deadpool.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Deadpool_Animated.webp",
+      "sha256": "3099b1ee5ff3e81e4c321990f3004d17e7ee2f24119ba098c8f05df939c37d0f",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.devil-dinosaur",
+      "filename": "devil-dinosaur.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Devil_Dinosaur_Animated.webp",
+      "sha256": "20f5e858f16579a7dfc8a7bdf2524bb8b4dc240e882b9cb6561848d2601c0b58",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.doctor-strange",
+      "filename": "doctor-strange.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Doctor_Strange_Animated.webp",
+      "sha256": "707b0eb8ca2cfd63fda44f5247aa306fc711b16e0d3fc6bd95483a27628f047f",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.elsa-bloodstone",
+      "filename": "elsa-bloodstone.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Elsa_Bloodstone_Animated.webp",
+      "sha256": "2af7cc6525daa177150bed5ef453a933ff3d2cf69c5722d32c7f166bf2da3792",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.emma-frost",
+      "filename": "emma-frost.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Emma_Frost_Animated.webp",
+      "sha256": "033c923644fd2c8c74204b35e47b4305e4fdb0258e7a0dbb1d0093801c799ca6",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.gambit",
+      "filename": "gambit.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Gambit_Animated.webp",
+      "sha256": "1b76114c71e6134315a244acb7b5373574209b8068abc7f123551226b8285a1d",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.groot",
+      "filename": "groot.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Groot_Animated.webp",
+      "sha256": "df233a18f995f0fd4d39cb5879d44ed5bfc99a8d2b1dac839234c68c26360ca0",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.hawkeye",
+      "filename": "hawkeye.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Hawkeye_Animated.webp",
+      "sha256": "b9529eccd5a626d757a6d896f5300e742f87384128712bdcb906847419fa41bb",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.hela",
+      "filename": "hela.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Hela_Animated.webp",
+      "sha256": "4a4bb2e988cd2288385054918b06cb98731e3dccac02090f186c02afa005b528",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.hulk",
+      "filename": "hulk.webp",
+      "kind": "animated",
+      "frames": 30,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Hulk_Animated.webp",
+      "sha256": "555f7e5f3910dbea38f862585f198a82e162ede41f8b29b2eedc9878f51587c2",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.human-torch",
+      "filename": "human-torch.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Human_Torch_Animated.webp",
+      "sha256": "8011e38f28f7574e5661bc9faafcb8fb535300683ae3e1ed213f17691fc378c6",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.invisible-woman",
+      "filename": "invisible-woman.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Invisible_Woman_Animated.webp",
+      "sha256": "e2984d9fe535ee0210df8eafa3018bca2080e8c045f09d07dc54a29413b64409",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.iron-fist",
+      "filename": "iron-fist.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Iron_Fist_Animated.webp",
+      "sha256": "60d873a2755c8ba4d10ef31bb74428ac94d11f7a449a16e41ac988c8caf7da9c",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.iron-man",
+      "filename": "iron-man.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Iron_Man_Animated.webp",
+      "sha256": "07a8e482c2b4d9e1a4b62f21a7c3cdc3c850bf54140532bae180802b39596c94",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.jeff-the-land-shark",
+      "filename": "jeff-the-land-shark.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Jeff_the_Land_Shark_Animated.webp",
+      "sha256": "168403f4260724f7f04ad81446a40c250930f03ea53ac536d2ce4e52e065a006",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.loki",
+      "filename": "loki.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Loki_Animated.webp",
+      "sha256": "5ce835f3a62e49093a901c5bb9dbd39e647c1f619682a46324dad0411e76754d",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.luna-snow",
+      "filename": "luna-snow.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Luna_Snow_Animated.webp",
+      "sha256": "c79ae51f0c64af018c71359a0e9a7bb9bfb78e4a495f6624fe9733d790262990",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.magik",
+      "filename": "magik.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Magik_Animated.webp",
+      "sha256": "44c4b90a1b5200ca5647b280efad4841f151e715803b0dc3fbca263c84bc593d",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.magneto",
+      "filename": "magneto.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Magneto_Animated.webp",
+      "sha256": "76a5796129f2c442845461866ff112b85241eceb91baf27464ca02802efdd6ce",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.mantis",
+      "filename": "mantis.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Mantis_Animated.webp",
+      "sha256": "c6215af14826e54d7e3f2b52cd32a1f6c6fa39f4d8487a000fe2d444928a2a22",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.mister-fantastic",
+      "filename": "mister-fantastic.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Mister_Fantastic_Animated.webp",
+      "sha256": "d455f4fe626947bfc4efd7c177ecde41bb460e7751a1684f65ba6f0ff5fc4286",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.moon-knight",
+      "filename": "moon-knight.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Moon_Knight_Animated.webp",
+      "sha256": "218bd0372bbc1c3a6fd401c0d5c68dcc97b304b96aa72de32e67ea7df0c3e63e",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.namor",
+      "filename": "namor.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Namor_Animated.webp",
+      "sha256": "e22e5c6bea9d326fb986f212726a57c79e06fe6ccdbc8cd2652def7d4bcf3f47",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.peni-parker",
+      "filename": "peni-parker.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Peni_Parker_Animated.webp",
+      "sha256": "f5cbd0c1a62090de8979797f8197f99023b97b620e4d4101ca0e6a47e3af60ac",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.phoenix",
+      "filename": "phoenix.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Phoenix_Animated.webp",
+      "sha256": "4a0d75631777bf3aa9ff26dc54edc1d90f92ca60c2de8cad06e98c4550ecad06",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.psylocke",
+      "filename": "psylocke.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Psylocke_Animated.webp",
+      "sha256": "9e93d54e2daa898a3cb1217b70c23b55b54562be44fb4e53fea8dea0f6537a71",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.rocket-raccoon",
+      "filename": "rocket-raccoon.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Rocket_Raccoon_Animated.webp",
+      "sha256": "8fe1fabfb1e8c1e179fef5729e5960adf3337232fae59b9c0b8692b231f64955",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.rogue",
+      "filename": "rogue.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Rogue_Animated.webp",
+      "sha256": "ac61e330da85b456a1a6e2310f33d03c612e526a941f1031d91d3d43622b9b65",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.scarlet-witch",
+      "filename": "scarlet-witch.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Scarlet_Witch_Animated.webp",
+      "sha256": "8dcd42d6031c972405c115d556fe96787a110c4a83983180cfd8d73300a64cfb",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.spider-man",
+      "filename": "spider-man.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Spider-Man_Animated.webp",
+      "sha256": "bc25321a3395e295a154918b4ba46dc9af599f67dae730d4e117ed4d3dcbce5e",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.squirrel-girl",
+      "filename": "squirrel-girl.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Squirrel_Girl_Animated.webp",
+      "sha256": "f70c1b9f516a4fb171eaae5b99d3c6bbd96c7ab890d7c0d75e8babc39c5a2e70",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.star-lord",
+      "filename": "star-lord.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Star-Lord_Animated.webp",
+      "sha256": "81fb9df7a0aafaa0250bc6c5b4b5cf07f4343e36230ad63a9b3432d1f5046917",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.storm",
+      "filename": "storm.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Storm_Animated.webp",
+      "sha256": "22a1c4c040f025fcef217b5e358a8016621f0e3bdcc9566ed3b5183152ba96fd",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.the-punisher",
+      "filename": "the-punisher.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_The_Punisher_Animated.webp",
+      "sha256": "191526667dadb1dba80fc414e5e213ef614a2cadcd2fa08c7c89487d25e533cd",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.the-thing",
+      "filename": "the-thing.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_The_Thing_Animated.webp",
+      "sha256": "c4cb069a1f2c56bfb3e7eb8eb07d289068ddf7ca2e60ed56bf33d7abcc7a4ba5",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.thor",
+      "filename": "thor.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Thor_Animated.webp",
+      "sha256": "50330380884bdd03d230580e9bbe5874deec365d2971f4036ae1bb0830af3018",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.ultron",
+      "filename": "ultron.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Ultron_Animated.webp",
+      "sha256": "00d157d14f8962e5239af16bddce98e4ab7b9c70a0980329c9e9fb54a071ad83",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.venom",
+      "filename": "venom.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Venom_Animated.webp",
+      "sha256": "debb9294acc8447d1ebb70f6c3781bca917f1845fd08db1bc8571926580e1d66",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.white-fox",
+      "filename": "white-fox.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_White_Fox_Animated.webp",
+      "sha256": "1bdbde5887e897687965690f7a7e04bb6c694a7e4b54dff9723aabb193972040",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.winter-soldier",
+      "filename": "winter-soldier.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Winter_Soldier_Animated.webp",
+      "sha256": "1299ecedf2b4b5aa124d4293a9083132d999eb07998881f0876ab20cacb511d0",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    },
+    {
+      "heroId": "hero.wolverine",
+      "filename": "wolverine.webp",
+      "kind": "animated",
+      "frames": 60,
+      "source": "https://raw.githubusercontent.com/Randolin/rivals-teamup-lab/main/avatars/Champion_Icon_Wolverine_Animated.webp",
+      "sha256": "e3b6ca4d41f211b7ac8ece51b1a8b1a090803a1672756bc126840604226849fe",
+      "rights": "not-verified — third-party Marvel/NetEase game asset"
+    }
+  ],
+  "rights": "MUST VERIFY: use or distribution of third-party game art is not licensed by MIT licence on source code. Do not publish until reviewed."
+}
