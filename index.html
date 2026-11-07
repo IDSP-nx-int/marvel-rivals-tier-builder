@@ -58,6 +58,23 @@
         </div>
       </details>
     </section>
+    <!-- M1.8_EXPLOIT_TIERS: global exploit priority; neither hero tiers nor persisted model change -->
+    <div class="tier-mode-switch" role="group" aria-label="Modo de rankings">
+      <button id="modeBase" type="button" class="btn outline" aria-pressed="true">Tier base · Main / Off / Flex</button>
+      <button id="modeExploits" type="button" class="btn outline" aria-pressed="false">Exploits por banda · Vanguard / Duelist / Strategist</button>
+    </div>
+    <section id="exploitView" class="exploit-view" hidden aria-label="Prioridad hipotética de exploits por banda">
+      <div class="exploit-view-head">
+        <div><h3>Tier de exploits — <span id="exploitBandName"></span></h3>
+          <p>Prioridad global S–D de <strong>estrategias explotables</strong>, no clasificación de héroes. Hipótesis sin validación empírica; editable en el rulepack.</p></div>
+        <span class="badge none">M1.8 · Experimental</span>
+      </div>
+      <div id="exploitTierBoard" class="exploit-tier-board" aria-label="Tiers de exploits"></div>
+      <div class="exploit-focus"><div><strong id="exploitFocusTitle"></strong><p id="exploitFocusDescription"></p><p id="exploitFocusReason"></p></div></div>
+      <h3 class="exploit-roles-title">Evidencia declarada por rol oficial</h3>
+      <p class="exploit-evidence-warning">Las coincidencias indican que tus Likert cumplen los requisitos definidos. No prueban que el exploit funcione en la partida ni otorgan tiers contextualizados a héroes. Se exige evidencia dentro del mismo perfil/subrol.</p>
+      <div id="exploitRolePanels" class="exploit-role-panels" aria-label="Evidencia por Vanguard Duelist y Strategist"></div>
+    </section>
     <div class="ranking-layout"><div id="boards" class="boards" aria-label="Tres rankings por subrol"></div><aside class="pool panel"><h3>Catálogo de héroes</h3><p>Arrastra al tier correspondiente o selecciona un héroe y pulsa una fila.</p><input id="heroSearch" class="input" type="search" placeholder="Buscar héroe…" aria-label="Buscar héroe"/><div id="heroPool" class="hero-pool"></div><div id="poolInfo" class="pool-info"></div></aside></div>
     <div id="editor" class="editor panel"><div class="editor-empty">Selecciona un héroe o arrástralo a cualquiera de los tres subroles para abrir la evaluación rápida.</div></div>
   </section>
