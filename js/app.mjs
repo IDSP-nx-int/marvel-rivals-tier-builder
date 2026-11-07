@@ -3,6 +3,7 @@ import {MECHANICS,migrateModelToV09,setMechanicRating} from './mechanics.mjs';
 import {validateBandV16Rulepack,analyzeBandV16} from './rank-band-v16.mjs';
 import {ROLE_GUIDANCE,SUBROLE_GUIDANCE,FLEX_DPS_BRIDGE,extraVisibleCaps,flexCoverageSummary} from './role-guidance.mjs';
 import {pendingSubrolesForHero,availableHeroesForCategory} from './catalog.mjs';
+import {validateExploitPack,rankedExploits,roleExploitCandidates} from './exploit-tier.mjs';
 
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const esc=x=>String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
@@ -10,7 +11,7 @@ const opt=(id,title,selected)=>`<option value="${esc(id)}" ${selected===id?'sele
 const names={vanguard:'Tank',duelist:'DPS',strategist:'Support'};
 const labels={space:'Espacio',threat:'Amenaza',conversion:'Conversión',sustain:'Sustain',response:'Respuesta defensiva',mobility:'Movilidad/rotación',enablement:'Habilitación'};
 const defaultPatch='patch.roster.2026-10-reference';
-const state={roster:null,taxonomy:null,model:null,category:'duelist',selected:null,expanded:false,compositions:[],currentComp:null,availableArt:new Set(),bandPack:null,bandId:'diamond',bandLens:'climbing',activeView:'rankings',saveTimer:null};
+const state={roster:null,taxonomy:null,model:null,category:'duelist',selected:null,expanded:false,compositions:[],currentComp:null,availableArt:new Set(),bandPack:null,exploitPack:null,rankingMode:'base',exploitId:'exploit.quick-conversion',bandId:'diamond',bandLens:'climbing',activeView:'rankings',saveTimer:null};
 function notify(msg){const x=$('#status');x.textContent=msg;x.classList.add('visible');clearTimeout(state.saveTimer);state.saveTimer=setTimeout(()=>x.classList.remove('visible'),4200);}
 function persist(){try{localStorage.setItem(STORE_KEY,JSON.stringify({model:state.model,compositions:state.compositions}));}catch(e){notify('Almacenamiento bloqueado o lleno: exporta un respaldo JSON.');}}
 function displayName(heroId){return state.roster.heroes.find(h=>h.id===heroId)?.name||'Héroe desconocido';}
@@ -59,8 +60,52 @@ function mechanicsPanel(hero,subrole,a,disabled){
      </details>`:''}
   </div></div>`;
 }
+
+// M1.8_EXPLOIT_TIERS: ranks exploits globally; hero ratings are only evidence of compatibility.
+function renderExploitView(){
+ const pack=state.exploitPack;
+ if(!pack)return;
+ const band=state.bandPack.bands.find(b=>b.id===state.bandId);
+ if(!band)return;
+ $('#exploitBandName').textContent=band.label;
+ const ordered=rankedExploits(pack,state.bandId);
+ if(!ordered.some(e=>e.id===state.exploitId))state.exploitId=ordered[0]?.id||null;
+ $('#exploitTierBoard').innerHTML=TIERS.map(t=>{
+  const cards=ordered.filter(e=>e.tier===t);
+  return `<div class="exploit-tier-row"><div class="exploit-tier-mark ${t}">${t}</div><div class="exploit-tier-cards">${cards.length?cards.map(e=>`<button type="button" class="exploit-chip" data-exploit="${esc(e.id)}" aria-pressed="${e.id===state.exploitId}">${esc(e.label)}</button>`).join(''):'<span class="muted">Sin exploits priorizados</span>'}</div></div>`;
+ }).join('');
+ const selected=ordered.find(e=>e.id===state.exploitId);
+ if(!selected)return;
+ $('#exploitFocusTitle').textContent=`${selected.tier} · ${selected.label}`;
+ $('#exploitFocusDescription').textContent=selected.description;
+ $('#exploitFocusReason').textContent='Por qué esta banda: '+selected.why;
+ const matches=roleExploitCandidates(state.model,state.roster,state.taxonomy,selected);
+ const roleTitles={vanguard:'Vanguard',duelist:'Duelist',strategist:'Strategist'};
+ const profileButton=(item)=>{
+  const hero=state.roster.heroes.find(h=>h.id===item.heroId);
+  const sub=item.profiles[0];
+  const initials=hero.name.split(/\s+|&/).filter(Boolean).slice(0,2).map(x=>x[0]).join('').toUpperCase();
+  const thumb=state.availableArt.has(hero.id)?`<img loading="lazy" src="./${esc(hero.portrait)}" alt="" />`:'';
+  const badges=item.profiles.map(p=>`${p.subroleLabel} (${p.tier} base)`).join(' · ');
+  return `<button class="exploit-profile" type="button" data-exploit-hero="${esc(item.heroId)}" data-exploit-category="${esc(item.category)}" data-exploit-subrole="${esc(sub.subroleId)}" title="Ver evaluación base de ${esc(item.name)}"><span class="mini-face"><span>${esc(initials)}</span>${thumb}</span><span class="exploit-profile-info"><span class="exploit-profile-name">${esc(item.name)}</span><span class="exploit-profile-meta">${esc(badges)}</span></span></button>`;
+ };
+ $('#exploitRolePanels').innerHTML=['vanguard','duelist','strategist'].map(role=>{
+  const entries=matches[role]||[],supported=entries.filter(x=>x.status==='supported'),provisional=entries.filter(x=>x.status==='provisional');
+  return `<section class="exploit-role-panel"><h4>${esc(roleTitles[role])} · ${supported.length} perfiles compatibles confirmados</h4>${supported.length?`<div class="exploit-profile-list">${supported.map(profileButton).join('')}</div>`:'<p class="exploit-role-empty">Sin evidencia bloqueada suficiente para este exploit. No significa Tier D.</p>'}${provisional.length?`<details><summary>${provisional.length} perfil(es) con evidencia provisional</summary><div class="exploit-profile-list">${provisional.map(profileButton).join('')}</div></details>`:''}<p class="exploit-legend">Compatibilidad declarada, no proyección automática de tier. Pulsa un héroe para abrir su evaluación original.</p></section>`;
+ }).join('');
+}
 function renderRankings(){
  renderBandSelector();
+ const manual=state.rankingMode==='base';
+ $('#modeBase').setAttribute('aria-pressed',String(manual));
+ $('#modeExploits').setAttribute('aria-pressed',String(!manual));
+ $('#view-rankings').classList.toggle('exploit-mode',!manual);
+ $('#exploitView').hidden=manual;
+ $('.ranking-layout').hidden=!manual;
+ $('.tier-guide').hidden=!manual;
+ $('#editor').hidden=!manual;
+ $('#roleGuide').hidden=!manual;
+ if(!manual){renderExploitView();return;}
  const roleGuide=ROLE_GUIDANCE[state.category];
  $('#roleGuide').innerHTML=`<strong>${esc(roleGuide.title)}:</strong> ${esc(roleGuide.description)}`;
  $$('.category-tab').forEach(b=>b.classList.toggle('active',b.dataset.category===state.category));
@@ -161,6 +206,11 @@ function bindUI(){
  $('#heroSearch').addEventListener('input',renderRankings);
  $('#bandSelect').onchange=e=>{state.bandId=e.target.value;renderRankings();};
  $('#bandLens').onchange=e=>{state.bandLens=e.target.value;renderRankings();};
+ $('#modeBase').onclick=()=>{state.rankingMode='base';renderRankings();};
+ $('#modeExploits').onclick=()=>{state.rankingMode='exploits';renderRankings();};
+ $('#exploitTierBoard').addEventListener('click',e=>{const btn=e.target.closest('[data-exploit]');if(btn){state.exploitId=btn.dataset.exploit;renderExploitView();}});
+ $('#exploitRolePanels').addEventListener('click',e=>{const btn=e.target.closest('[data-exploit-hero]');if(!btn)return;state.category=btn.dataset.exploitCategory;state.selected={heroId:btn.dataset.exploitHero,subroleId:btn.dataset.exploitSubrole};state.rankingMode='base';state.expanded=false;renderRankings();$('#editor').scrollIntoView({behavior:'smooth',block:'start'});});
+
  $$('.category-tab').forEach(b=>b.onclick=()=>{state.category=b.dataset.category;state.selected=null;state.expanded=false;$('#heroSearch').value='';renderRankings();});
  $('#boards').addEventListener('click',e=>{const p=e.target.closest('.portrait');if(p){pick(p.dataset.hero,p.dataset.sourceSubrole);return;}const row=e.target.closest('.tier');if(!row)return;if(!state.selected)return notify('Primero selecciona un héroe del catálogo.');handleTier(state.selected.heroId,row.dataset.targetSubrole,row.dataset.tier);});
  $('#heroPool').addEventListener('click',e=>{const p=e.target.closest('.portrait');if(p)pick(p.dataset.hero,null);});
@@ -235,7 +285,7 @@ function bindUI(){
  $('#cancelModal').onclick=()=>$('#confirmModal').close();
 }
 async function init(){try{
- const [r,t,manifest,bandPack]=await Promise.all([fetch('./data/roster.reference.json').then(x=>{if(!x.ok)throw new Error('roster');return x.json();}),fetch('./data/taxonomy.json').then(x=>{if(!x.ok)throw new Error('taxonomía');return x.json();}),fetch('./assets/heroes/manifest.json').then(x=>x.json()).catch(()=>({heroIds:[]})),fetch('./data/rank-bands.v10.json').then(x=>{if(!x.ok)throw new Error('reglas de bandas');return x.json();})]);const bandErrors=validateBandV16Rulepack(bandPack);if(bandErrors.length)throw new Error('Reglas por banda inválidas: '+bandErrors[0]);state.bandPack=bandPack;state.roster=r;state.taxonomy=t;state.availableArt=new Set(manifest.heroIds||[]);
+ const [r,t,manifest,bandPack,exploitPack]=await Promise.all([fetch('./data/roster.reference.json').then(x=>{if(!x.ok)throw new Error('roster');return x.json();}),fetch('./data/taxonomy.json').then(x=>{if(!x.ok)throw new Error('taxonomía');return x.json();}),fetch('./assets/heroes/manifest.json').then(x=>x.json()).catch(()=>({heroIds:[]})),fetch('./data/rank-bands.v10.json').then(x=>{if(!x.ok)throw new Error('reglas de bandas');return x.json();}),fetch('./data/exploits.v1.json').then(x=>{if(!x.ok)throw new Error('tiers de exploits');return x.json();})]);const bandErrors=validateBandV16Rulepack(bandPack);if(bandErrors.length)throw new Error('Reglas por banda inválidas: '+bandErrors[0]);const exploitErrors=validateExploitPack(exploitPack,bandPack,t);if(exploitErrors.length)throw new Error('Exploits inválidos: '+exploitErrors[0]);state.exploitPack=exploitPack;state.bandPack=bandPack;state.roster=r;state.taxonomy=t;state.availableArt=new Set(manifest.heroIds||[]);
  let saved;try{saved=JSON.parse(localStorage.getItem(STORE_KEY));}catch{}
  let candidate=saved?.model,migrationError=null;try{if(candidate)candidate=migrateModelToV09(candidate);}catch(err){migrationError=err.message;}const errors=candidate&&!migrationError?validateModel(candidate,r,t,defaultPatch):migrationError?[migrationError]:[];
  state.model=candidate&&!errors.length?candidate:newModel(defaultPatch);

@@ -76,7 +76,7 @@
 .flex-bridge .score-row{margin-bottom:4px}
 @media(max-width:750px){.subrole-guidance{min-height:0;font-size:10px}.flex-bridge .bridge-label small{display:block}}
 
-/* M1.7.2 � Mantener retratos animados dentro de las tarjetas */
+/* M1.7.2 — Mantener retratos animados dentro de las tarjetas */
 .portrait .face {
   position: relative;
   overflow: hidden;
@@ -96,3 +96,41 @@
   border-radius: inherit;
   pointer-events: none;
 }
+
+/* M1.8_EXPLOIT_TIERS — independent exploit priority, three official-role evidence panels */
+#view-rankings .exploit-view[hidden],#view-rankings .tier-guide[hidden],#view-rankings .ranking-layout[hidden],#view-rankings #editor[hidden],#view-rankings #roleGuide[hidden]{display:none!important}
+.tier-mode-switch{display:flex;flex-wrap:wrap;gap:8px;margin:9px 0 12px}
+.tier-mode-switch .btn{font-size:12px;padding:9px 12px}
+.tier-mode-switch .btn[aria-pressed="true"]{background:#1d526e;border-color:#67cbfa;color:#fff}
+.exploit-mode .category-tabs{display:none}
+.exploit-view{border:1px solid #31516c;border-radius:10px;background:#0c1c2b;padding:13px;margin-bottom:13px}
+.exploit-view-head{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;margin-bottom:10px}
+.exploit-view-head h3{margin:0 0 5px;font-size:18px}.exploit-view-head p{max-width:890px;color:#9fbed1;font-size:12px;margin:0}
+.exploit-tier-board{display:flex;flex-direction:column;border:1px solid #36556b;border-radius:8px;overflow:hidden}
+.exploit-tier-row{display:flex;align-items:stretch;min-height:62px;border-bottom:1px solid #31516c}
+.exploit-tier-row:last-child{border-bottom:0}
+.exploit-tier-mark{width:49px;flex:0 0 49px;display:grid;place-items:center;font-size:17px;font-weight:850;color:#091725}
+.exploit-tier-mark.S{background:#fa496b}.exploit-tier-mark.A{background:#f4a661}.exploit-tier-mark.B{background:#f3d479}.exploit-tier-mark.C{background:#88dca7}.exploit-tier-mark.D{background:#78b5ee}
+.exploit-tier-cards{display:flex;flex-wrap:wrap;align-items:center;gap:7px;padding:8px;min-width:0}
+.exploit-chip{display:inline-flex;align-items:center;min-height:34px;max-width:245px;border:1px solid #456b82;border-radius:6px;background:#173448;color:#e4f4ff;font-size:12px;text-align:left;padding:7px 9px}
+.exploit-chip:hover,.exploit-chip:focus-visible{border-color:#78d3ff;background:#204b62}
+.exploit-chip[aria-pressed="true"]{background:#215b77;border:2px solid #68cdfb;padding:6px 8px}
+.exploit-focus{margin:12px 0;padding:11px 13px;border-left:3px solid #65bfe8;background:#122b41;border-radius:5px}
+.exploit-focus strong{font-size:14px}.exploit-focus p{margin:5px 0 0;color:#b5d2e4;font-size:12px}
+.exploit-roles-title{font-size:15px;margin:16px 0 2px}.exploit-evidence-warning{color:#9bbbd0;font-size:11px;max-width:1050px;margin:0 0 9px}
+.exploit-role-panels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.exploit-role-panel{background:#11283b;border:1px solid #3a5870;border-radius:8px;padding:10px;min-width:0}
+.exploit-role-panel h4{font-size:13px;margin:0 0 7px;padding-bottom:6px;border-bottom:2px solid #48778c}
+.exploit-role-panel .exploit-profile-list{display:flex;flex-wrap:wrap;gap:7px}
+.exploit-profile{display:flex;align-items:center;gap:7px;background:#0d2233;border:1px solid #33546d;border-radius:7px;min-width:0;width:100%;padding:5px 7px;color:#e4f2fb;text-align:left}
+.exploit-profile:hover,.exploit-profile:focus-visible{border-color:#69cdfc;background:#193a50}
+.exploit-profile .mini-face{display:grid;place-items:center;flex:0 0 39px;width:39px;height:39px;border-radius:5px;position:relative;overflow:hidden;background:#29475c;font-weight:bold;font-size:11px}
+.exploit-profile .mini-face img{position:absolute;inset:0;width:100%;height:100%;max-width:100%;max-height:100%;object-fit:cover;pointer-events:none}
+.exploit-profile .exploit-profile-info{min-width:0}.exploit-profile .exploit-profile-name{display:block;font-size:11px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
+.exploit-profile .exploit-profile-meta{display:block;font-size:10px;color:#9dbbcc;overflow-wrap:anywhere}
+.exploit-role-empty{font-size:11px;color:#91b0c7;margin:7px 0}
+.exploit-role-panel details{margin-top:10px;font-size:11px;color:#b3d7ea}
+.exploit-role-panel summary{cursor:pointer}.exploit-role-panel details .exploit-profile-list{margin-top:7px}
+.exploit-legend{font-size:10px;color:#87aabd;margin:8px 0 0}
+@media(max-width:950px){.exploit-role-panels{grid-template-columns:1fr}.exploit-profile{width:calc(50% - 5px)}}
+@media(max-width:610px){.exploit-profile{width:100%}.exploit-tier-mark{width:33px;flex-basis:33px}.exploit-chip{font-size:11px}.exploit-view-head{flex-direction:column}}
